@@ -1,0 +1,7 @@
+node_modules
+.next
+data/guests.json
+.env*.local
+.env
+next-env.d.ts
+data/wishes.json
