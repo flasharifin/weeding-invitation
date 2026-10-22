@@ -48,11 +48,13 @@ export default function Shell({
 
       {phase !== "open" && (
         <div className={phase === "opening" ? "cover leaving" : "cover"}>
-          <div className="ring r1" /><div className="ring r2" />
+          <span className="cnr tl" aria-hidden="true" /><span className="cnr tr" aria-hidden="true" />
+          <span className="cnr bl" aria-hidden="true" /><span className="cnr br" aria-hidden="true" />
           <Floral spot="cover-tl" /><Floral spot="cover-tr" /><Floral spot="cover-bl" /><Floral spot="cover-br" />
-          <p className="eyebrow cv" style={delay(200)}>The Wedding Of</p>
-          <h1 className="script names cv" style={delay(500)}>{bride} <span>&amp;</span> {groom}</h1>
-          <div className="orn cv" style={delay(800)}><i /><b>✦</b><i /></div>
+          <div className="monogram cv" style={delay(150)}><span>{bride.charAt(0)}&nbsp;{groom.charAt(0)}</span></div>
+          <p className="eyebrow cv" style={delay(400)}>The Wedding Of</p>
+          <h1 className="names cv" style={delay(600)}>{bride} <span>&amp;</span> {groom}</h1>
+          <div className="divider cv" style={{ ...delay(850), maxWidth: 150 }}><i /></div>
           <p className="muted cv" style={delay(1000)}>Kepada Yth.</p>
           <h2 className="cv" style={{ ...delay(1200), margin: "4px 0 26px" }}>{name}</h2>
           <button className="btn pulse cv" style={delay(1500)} onClick={open}>Buka Undangan</button>

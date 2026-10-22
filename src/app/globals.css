@@ -1,16 +1,24 @@
 :root {
-  --bg: #faf6f1;
-  --ink: #3b2f2f;
-  --muted: #8a7a72;
-  --gold: #b08a4a;
-  --card: #ffffff;
-  --line: #eadfd3;
+  --bg: #f5efe6;
+  --panel: #fffdf9;
+  --ink: #40342c;
+  --muted: #978578;
+  --gold: #b2914f;
+  --gold-soft: #d8c49180;
+  --blush: #e7cabf;
+  --card: #fffdf9;
+  --line: #e7dccb;
   --good: #1f8a4c;
   --bad: #c0392b;
   --serif: "Cormorant Garamond", "Playfair Display", Georgia, "Times New Roman", serif;
+  --script: "Pinyon Script", "Cormorant Garamond", cursive;
+  --sans: "Jost", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --corner: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23b2914f' stroke-width='1.3' stroke-linecap='round'%3E%3Cpath d='M6 6 L6 34 M6 6 L34 6'/%3E%3Cpath d='M10 10 L10 34 M10 10 L34 10' opacity='.5'/%3E%3Cpath d='M14 14 C34 14 30 34 46 30 C40 40 24 40 20 28'/%3E%3Cpath d='M14 14 C14 34 34 30 30 46 C40 40 40 24 28 20'/%3E%3C/g%3E%3Ccircle cx='14' cy='14' r='2.4' fill='%23b2914f'/%3E%3Ccircle cx='47' cy='29' r='1.6' fill='%23b2914f'/%3E%3Ccircle cx='29' cy='47' r='1.6' fill='%23b2914f'/%3E%3C/svg%3E");
+  --crest: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 40'%3E%3Cg fill='none' stroke='%23b2914f' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M60 6 L60 30'/%3E%3Cpath d='M60 10 C70 10 76 16 80 8 C82 18 72 22 62 18'/%3E%3Cpath d='M60 10 C50 10 44 16 40 8 C38 18 48 22 58 18'/%3E%3Cpath d='M60 22 C68 22 72 28 76 24 M60 22 C52 22 48 28 44 24'/%3E%3C/g%3E%3Cpath d='M60 2 L63 9 L60 15 L57 9 Z' fill='%23b2914f'/%3E%3Ccircle cx='60' cy='30' r='2' fill='%23b2914f'/%3E%3C/svg%3E");
 }
 * { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 16px/1.6 var(--sans);
+  background-image: radial-gradient(circle at 20% 8%, #fbf6ee 0, transparent 55%), radial-gradient(circle at 85% 82%, #f4e9db 0, transparent 50%); background-attachment: fixed; }
 h1, h2, h3 { font-family: var(--serif); font-weight: 600; }
 a { color: inherit; }
 .script { font-family: var(--serif); font-style: italic; font-weight: 500; }
@@ -213,3 +221,77 @@ footer { margin-top: 32px; }
 
 .shield canvas { visibility: hidden; }
 @media print { .protect canvas { visibility: hidden; } }
+
+/* ======================= DESAIN PREMIUM ======================= */
+.calli { font-family: var(--script); font-style: normal; font-weight: 400; line-height: 1.1; }
+.eyebrow { font-family: var(--sans); font-weight: 400; font-size: 12px; letter-spacing: .42em; }
+
+/* Bingkai kartu berornamen */
+.frame { position: relative; background: var(--panel); border: 1px solid var(--gold-soft);
+  border-radius: 3px; padding: 34px 22px; margin: 22px 0;
+  box-shadow: 0 14px 40px -22px rgba(90, 60, 30, .5); }
+.frame::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--gold-soft);
+  border-radius: 2px; pointer-events: none; }
+.frame.plush { padding: 40px 24px; }
+.cnr { position: absolute; width: 42px; height: 42px; background: var(--corner) center/contain no-repeat;
+  pointer-events: none; z-index: 2; }
+.cnr.tl { top: -2px; left: -2px; }
+.cnr.tr { top: -2px; right: -2px; transform: scaleX(-1); }
+.cnr.bl { bottom: -2px; left: -2px; transform: scaleY(-1); }
+.cnr.br { bottom: -2px; right: -2px; transform: scale(-1, -1); }
+
+/* Kepala bagian: crest + judul */
+.sec-head { text-align: center; margin-bottom: 18px; }
+.crest { width: 104px; height: 34px; margin: 0 auto 6px; background: var(--crest) center/contain no-repeat; }
+.sec-head h3 { font-family: var(--serif); font-weight: 500; font-size: 30px; margin: 0; }
+
+/* Pembatas ornamen */
+.divider { display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: auto; max-width: 230px; margin: 12px auto; color: var(--gold); }
+.divider::before, .divider::after { content: ""; height: 1px; flex: 1;
+  background: linear-gradient(90deg, transparent, var(--gold-soft) 40%, var(--gold)); }
+.divider::after { transform: scaleX(-1); }
+.divider i { width: 7px; height: 7px; background: var(--gold); transform: rotate(45deg); flex: none; }
+.divider svg { display: none; }
+
+/* Countdown */
+.countdown { display: flex; justify-content: center; gap: 10px; }
+.countdown div { width: 66px; padding: 12px 0; background: var(--panel); border: 1px solid var(--gold-soft); border-radius: 4px; }
+.countdown b { display: block; font-family: var(--serif); font-size: 28px; font-weight: 500; font-variant-numeric: tabular-nums; }
+.countdown span { font-family: var(--sans); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+/* Mempelai */
+.couple { display: grid; gap: 24px; text-align: center; }
+.couple .calli { font-size: 42px; margin: 2px 0; }
+.amp { font-family: var(--script); font-size: 52px; color: var(--gold); line-height: .5; }
+.fl-accent { width: 84px; height: 56px; margin: 2px auto 6px; background: var(--sprig) center/contain no-repeat; }
+
+/* Foto berbingkai emas berlapis */
+.arch { border: 4px solid var(--panel);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 0 7px var(--panel), 0 0 0 8px var(--gold-soft), 0 16px 34px -16px rgba(90, 60, 30, .5); }
+.portrait { width: 150px; height: 150px; border: 4px solid var(--panel);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 0 6px var(--panel), 0 0 0 7px var(--gold-soft); }
+
+/* Cover: bingkai emas penuh + monogram */
+.cover { box-shadow: inset 0 0 0 1px var(--gold-soft), inset 0 0 0 9px var(--panel), inset 0 0 0 10px var(--gold-soft); }
+.cover > .cnr { position: absolute; z-index: 3; width: 54px; height: 54px; }
+.cover > .cnr.tl { top: 16px; left: 16px; }
+.cover > .cnr.tr { top: 16px; right: 16px; }
+.cover > .cnr.bl { bottom: 16px; left: 16px; }
+.cover > .cnr.br { bottom: 16px; right: 16px; }
+.monogram { width: 90px; height: 90px; display: grid; place-items: center; border-radius: 50%;
+  border: 1px solid var(--gold); color: var(--gold); position: relative; margin-bottom: 4px; }
+.monogram::after { content: ""; position: absolute; inset: 5px; border-radius: 50%; border: 1px solid var(--gold-soft); }
+.monogram span { font-family: var(--serif); font-size: 28px; letter-spacing: .04em; }
+
+/* Tombol emas mewah */
+.btn { font-family: var(--sans); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; font-size: 13px;
+  background: linear-gradient(180deg, #bd9b57, #a07e3e); border: 0; color: #fff; padding: 13px 24px;
+  box-shadow: 0 8px 20px -8px #8a6a2e, inset 0 1px 0 #e9d8ad; }
+.btn.ghost, .btn.danger, .btn.light, .btn.sm { text-transform: none; letter-spacing: normal; box-shadow: none; }
+
+.quote { text-align: center; font-size: 21px; line-height: 1.5; }
+.person .muted { margin-top: 2px; }
+.fl-foot { width: 118px; height: 86px; margin: 0 auto 8px; background: var(--blossoms) center/contain no-repeat; opacity: .95; }
+.thanks { font-size: 38px; color: var(--gold); margin-bottom: 6px; }
+footer.muted { text-align: center; padding: 26px 0 44px; }
