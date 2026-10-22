@@ -10,6 +10,7 @@ import Reveal from "@/app/i/[token]/Reveal";
 import Photo from "./Photo";
 import Corners from "./Corners";
 import Divider from "./Divider";
+import { GardenDepth, GardenScene } from "./GardenMotion";
 
 type InvitationGuest = Pick<Guest, "id" | "name" | "token" | "pax" | "rsvp" | "checkedInAt">;
 
@@ -21,13 +22,13 @@ function Heading({ eyebrow, children }: { eyebrow?: string; children: React.Reac
   </header>;
 }
 
-function Scene() { return <div className="garden-landscape" aria-hidden="true" />; }
+function Scene() { return <div className="garden-landscape" aria-hidden="true"><GardenScene variant="landscape" /></div>; }
 
 function Portrait({ src, name }: { src: string; name: string }) {
-  return <div className="garden-portrait">
+  return <GardenDepth className="garden-portrait">
     {src.endsWith(".svg") ? <div className="garden-initial" aria-label={`Foto ${name} belum tersedia`}><span>{name[0]}</span></div>
       : <Photo src={src} alt={name} sizes="210px" />}
-  </div>;
+  </GardenDepth>;
 }
 
 function calendarUrl() {
@@ -54,6 +55,7 @@ export default function Invitation({ guest, wishes = [], preview = false }: {
     <Shell name={guest.name} bride={event.bride} groom={event.groom} date={shortDate} music={event.musicUrl} preview={preview}>
       <main className="garden-invitation" id="undangan">
         <section className="garden-hero" aria-labelledby="wedding-names">
+          <GardenScene />
           <div className="garden-hero-copy">
             <p className="garden-eyebrow">Together, by the grace of Allah</p>
             <h1 className="garden-names" id="wedding-names">{event.bride}<span>&amp; {event.groom}</span></h1>
@@ -101,7 +103,7 @@ export default function Invitation({ guest, wishes = [], preview = false }: {
           <Reveal>
             <Heading eyebrow="Menghitung waktu menuju">Hari Bahagia</Heading>
             <Countdown target={event.dateISO} />
-            <div className="garden-event-card">
+            <GardenDepth className="garden-event-card">
               <div className="crest" aria-hidden="true" />
               <h3>Resepsi Pernikahan</h3>
               <p className="garden-weekday">{weekday}</p>
@@ -115,7 +117,7 @@ export default function Invitation({ guest, wishes = [], preview = false }: {
                 <a className="btn" href={event.mapsUrl} target="_blank" rel="noreferrer"><span aria-hidden="true">⌖</span> Lihat Lokasi</a>
                 <a className="btn ghost" href={calendarUrl()} download="pernikahan-shinta-ryan.ics"><span aria-hidden="true">▦</span> Simpan Tanggal</a>
               </div>
-            </div>
+            </GardenDepth>
           </Reveal>
           <Scene />
         </section>
@@ -165,7 +167,7 @@ export default function Invitation({ guest, wishes = [], preview = false }: {
           <p>Merupakan suatu kehormatan dan kebahagiaan bagi kami<br />untuk merayakan hari istimewa ini bersama Anda.</p>
           <p className="garden-signature">{event.bride} &amp; {event.groom}</p>
           <Divider />
-          <p className="garden-made">DENGAN CINTA · PANORAMA DIGITAL</p>
+          <p className="garden-made">MADE WITH ❤️ BY PANORAMA DIGITAL</p>
           {event.musicCredit && <p className="garden-credit">{event.musicCredit}</p>}
           <Scene />
         </footer>

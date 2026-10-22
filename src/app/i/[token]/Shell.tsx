@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Corners from "@/components/Corners";
 import Divider from "@/components/Divider";
+import { GardenMotionContext, GardenScene } from "@/components/GardenMotion";
 
 export default function Shell({ name, bride, groom, date, music, preview = false, children }: {
   name: string; bride: string; groom: string; date: string; music: string;
@@ -47,6 +48,7 @@ export default function Shell({ name, bride, groom, date, music, preview = false
     <div className="garden-site">
       <audio ref={audio} src={music} loop preload="none" onError={() => setHasMusic(false)} />
       <aside className="garden-desktop" aria-label={`Pernikahan ${bride} dan ${groom}`}>
+        <GardenScene variant="desktop" />
         <div className="garden-desktop-copy">
           <p className="garden-eyebrow">The wedding of</p>
           <p className="garden-names">{bride}<span>&amp; {groom}</span></p>
@@ -59,6 +61,7 @@ export default function Shell({ name, bride, groom, date, music, preview = false
       <div className="garden-column">
         {phase !== "open" && (
           <section className={`garden-cover ${phase === "opening" ? "is-leaving" : ""}`} aria-label="Sampul undangan">
+            <GardenScene variant="cover" />
             <div className="garden-cover-frame"><Corners /></div>
             {preview && <span className="garden-preview-label">Preview desain</span>}
             <div className="garden-cover-title">
@@ -77,9 +80,9 @@ export default function Shell({ name, bride, groom, date, music, preview = false
           </section>
         )}
         <div ref={stage} tabIndex={-1} inert={phase !== "open"} aria-hidden={phase !== "open"}
-          className={`garden-stage ${phase === "open" ? "is-open" : ""}`}>
+          className={`garden-stage ${phase === "open" ? "is-open" : phase === "opening" ? "is-opening" : ""}`}>
           {preview && <div className="garden-preview-banner">Preview desain · Formulir hanya untuk simulasi</div>}
-          {children}
+          <GardenMotionContext.Provider value={phase === "open"}>{children}</GardenMotionContext.Provider>
         </div>
       </div>
       {phase === "open" && hasMusic && (

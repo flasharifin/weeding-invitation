@@ -27,6 +27,8 @@ Tema undangan ada di `src/app/garden.css`, dibatasi oleh `.garden-site` agar hal
 
 Ilustrasi WebP tersimpan di `public/garden/`. Prompt dan asal aset tercatat di [docs/garden-assets.md](docs/garden-assets.md).
 
+Animasi kedalaman ada di `src/components/GardenMotion.tsx` dan `src/app/garden.css`: lapisan taman mengikuti kursor/scroll, bunga berayun, serta bingkai foto dan kartu acara memiliki kemiringan perspektif. Efek otomatis berhenti di luar layar, saat tab tersembunyi, atau saat perangkat mengaktifkan `prefers-reduced-motion`. Ponsel menggunakan scroll tanpa akses sensor gerak.
+
 ## Pemeriksaan
 
 ```sh
