@@ -99,10 +99,15 @@ export function GardenScene({ variant = "hero" }: { variant?: "cover" | "hero" |
   const ref = useGardenMotion(true);
   return (
     <div ref={ref} className={`garden-scene garden-scene-${variant}`} aria-hidden="true" data-motion-active="false">
-      <div className="garden-scene-distance" />
-      <div className="garden-scene-light" />
-      <div className="garden-scene-flowers garden-scene-left"><span /></div>
-      <div className="garden-scene-flowers garden-scene-right"><span /></div>
+      <div className="garden-scene-camera">
+        <div className="garden-scene-distance" />
+        <div className="garden-scene-light" />
+        <div className="garden-scene-flowers garden-scene-left"><span /></div>
+        <div className="garden-scene-flowers garden-scene-right"><span /></div>
+        {variant !== "landscape" && <div className="garden-pollen">
+          {Array.from({ length: 8 }, (_, i) => <i key={i} style={{ "--pollen-index": i } as React.CSSProperties} />)}
+        </div>}
+      </div>
     </div>
   );
 }

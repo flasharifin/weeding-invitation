@@ -1,20 +1,24 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Corners from "@/components/Corners";
 import Divider from "@/components/Divider";
 import { GardenMotionContext, GardenScene } from "@/components/GardenMotion";
+import InvitationSplash from "@/components/InvitationSplash";
 
 export default function Shell({ name, bride, groom, date, music, preview = false, children }: {
   name: string; bride: string; groom: string; date: string; music: string;
   preview?: boolean; children: React.ReactNode;
 }) {
-  const [phase, setPhase] = useState<"closed" | "opening" | "open">("closed");
+  const [phase, setPhase] = useState<"loading" | "revealing" | "closed" | "opening" | "open">("loading");
   const [playing, setPlaying] = useState(false);
   const [hasMusic, setHasMusic] = useState(true);
   const audio = useRef<HTMLAudioElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stage = useRef<HTMLDivElement>(null);
+  const cover = useRef<HTMLElement>(null);
+  const revealCover = useCallback(() => setPhase("revealing"), []);
+  const finishLoading = useCallback(() => setPhase("closed"), []);
 
   useEffect(() => {
     if (new URLSearchParams(window.location.search).get("preview") === "1") setPhase("open");
@@ -25,6 +29,7 @@ export default function Shell({ name, bride, groom, date, music, preview = false
     const previous = document.body.style.overflow;
     document.body.style.overflow = phase === "open" ? "" : "hidden";
     if (phase === "open") stage.current?.focus({ preventScroll: true });
+    if (phase === "closed") cover.current?.focus({ preventScroll: true });
     return () => { document.body.style.overflow = previous; };
   }, [phase]);
 
@@ -34,7 +39,7 @@ export default function Shell({ name, bride, groom, date, music, preview = false
     audio.current?.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
     window.scrollTo(0, 0);
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    timer.current = setTimeout(() => setPhase("open"), reduced ? 0 : 800);
+    timer.current = setTimeout(() => setPhase("open"), reduced ? 0 : 2400);
   }
 
   function toggle() {
@@ -45,10 +50,13 @@ export default function Shell({ name, bride, groom, date, music, preview = false
   }
 
   return (
-    <div className="garden-site">
+    <div className="garden-site" data-phase={phase}>
+      {(phase === "loading" || phase === "revealing") && (
+        <InvitationSplash bride={bride} groom={groom} onReveal={revealCover} onComplete={finishLoading} />
+      )}
       <audio ref={audio} src={music} loop preload="none" onError={() => setHasMusic(false)} />
       <aside className="garden-desktop" aria-label={`Pernikahan ${bride} dan ${groom}`}>
-        <GardenScene variant="desktop" />
+        <GardenMotionContext.Provider value={phase !== "loading"}><GardenScene variant="desktop" /></GardenMotionContext.Provider>
         <div className="garden-desktop-copy">
           <p className="garden-eyebrow">The wedding of</p>
           <p className="garden-names">{bride}<span>&amp; {groom}</span></p>
@@ -60,8 +68,9 @@ export default function Shell({ name, bride, groom, date, music, preview = false
       </aside>
       <div className="garden-column">
         {phase !== "open" && (
-          <section className={`garden-cover ${phase === "opening" ? "is-leaving" : ""}`} aria-label="Sampul undangan">
-            <GardenScene variant="cover" />
+          <section ref={cover} tabIndex={-1} className={`garden-cover ${phase !== "loading" ? "is-ready" : ""} ${phase === "opening" ? "is-leaving" : ""}`}
+            inert={phase !== "closed"} aria-hidden={phase !== "closed"} aria-label="Sampul undangan">
+            <GardenMotionContext.Provider value={phase !== "loading"}><GardenScene variant="cover" /></GardenMotionContext.Provider>
             <div className="garden-cover-frame"><Corners /></div>
             {preview && <span className="garden-preview-label">Preview desain</span>}
             <div className="garden-cover-title">
@@ -73,7 +82,7 @@ export default function Shell({ name, bride, groom, date, music, preview = false
             <div className="garden-recipient">
               <p>Kepada Yth. Bapak/Ibu/Saudara/i</p>
               <h2>{name}</h2>
-              <button className="btn" onClick={open} disabled={phase === "opening"}>
+              <button className="btn garden-open-button" onClick={open} disabled={phase !== "closed"}>
                 <span aria-hidden="true">✉</span> {phase === "opening" ? "Membuka undangan…" : "Buka Undangan"}
               </button>
             </div>
@@ -82,7 +91,7 @@ export default function Shell({ name, bride, groom, date, music, preview = false
         <div ref={stage} tabIndex={-1} inert={phase !== "open"} aria-hidden={phase !== "open"}
           className={`garden-stage ${phase === "open" ? "is-open" : phase === "opening" ? "is-opening" : ""}`}>
           {preview && <div className="garden-preview-banner">Preview desain · Formulir hanya untuk simulasi</div>}
-          <GardenMotionContext.Provider value={phase === "open"}>{children}</GardenMotionContext.Provider>
+          <GardenMotionContext.Provider value={phase === "open" || phase === "opening"}>{children}</GardenMotionContext.Provider>
         </div>
       </div>
       {phase === "open" && hasMusic && (

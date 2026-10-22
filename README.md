@@ -16,6 +16,8 @@ npm run dev
 
 Tambahkan `?preview=1` untuk langsung melewati sampul, misalnya `/preview?preview=1`.
 
+Pembukaan normal dimulai dengan splash “Wedding Invitation” dan angka 0–100% saat ilustrasi dan font disiapkan. Setelah itu, sampul muncul bertahap; tombol Buka Undangan memulai transisi taman selama 2,4 detik. Persiapan memiliki batas tunggu 8 detik agar aset yang gagal/lambat tidak mengunci undangan. Parameter `?preview=1` melewati splash sekaligus sampul. Pengaturan reduced motion mempercepat splash dan melewati transisi gerak.
+
 ## Mengganti isi dan foto
 
 Data pasangan, tanggal, lokasi, musik, dan path foto berada di `src/lib/config.ts`.
