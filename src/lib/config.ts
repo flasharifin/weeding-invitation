@@ -1,20 +1,20 @@
 // Data acara (PLACEHOLDER) - ganti dengan data klien.
 export const event = {
-  bride: "Aisyah",
-  groom: "Rafi",
-  brideFull: "Aisyah Putri Rahmawati",
-  groomFull: "Muhammad Rafi Pratama",
-  brideParents: "Putri dari Bapak Ahmad & Ibu Siti",
-  groomParents: "Putra dari Bapak Hasan & Ibu Dewi",
-  dateISO: "2026-12-12T10:00:00+07:00",
-  dateText: "Sabtu, 12 Desember 2026",
+  bride: "Shinta",
+  groom: "Ryan",
+  brideFull: "Dita Shintya Marthatinova S.H., M.Kn",
+  groomFull: "Ryan Tridarmanto Utomo",
+  brideParents: "Putri dari Bapak Sunaryo S. Sos & Ibu Dra. Rara Nunuk Setyoningsih",
+  groomParents: "Putra dari Bapak Sulastono & Ibu Riah",
+  dateISO: "2027-03-28T10:00:00+07:00",
+  dateText: "Minggu, 28 Maret 2027",
   timeText: "10.00 WIB - selesai",
-  venue: "Gedung Serbaguna Melati",
-  address: "Jl. Merdeka No. 10, Jakarta",
-  mapsUrl: "https://maps.google.com/?q=Monas+Jakarta",
+  venue: "Gedung Balai Prajurit RM Moedjono Poerbonegoro Puspenerbal Juanda",
+  address: "Jl. Raya Bandara Juanda No.11, Sudimoro, Betro, Kec. Sedati,  Kabupaten Sidoarjo",
+  mapsUrl: "google.com/maps/place/Jl.+Raya+Bandara+Juanda+No.11,+Sudimoro,+Betro,+Kec.+Sidoarjo,+Kabupaten+Sidoarjo,+Jawa+Timur+61253/data=!4m2!3m1!1s0x2dd7e506abae97e3:0x698e5e3ce2cbf65?sa=X&ved=1t:242&ictx=111",
   quote:
-    "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu merasa tenteram kepadanya.",
-  quoteSource: "QS. Ar-Rum: 21",
+    "Dan nikahkanlah orang-orang yang masih membujang di antara kamu, dan juga orang-orang yang layak (menikah) dari hamba-hamba sahayamu yang laki-laki dan perempuan.Jika mereka miskin, Allah akan memberi kemampuan kepada mereka dengan karunia-Nya. Dan Allah Maha luas (pemberian-Nya), Maha Mengetahui.",
+  quoteSource: "QS. An-Nur: 32",
   // Foto (PLACEHOLDER). Taruh foto asli di /public/photos lalu ubah path di bawah, mis. "/photos/cover.jpg".
   // Tips: kompres foto (maks ±1 MB, lebar ≤ 2000px). Cover & galeri portrait (3:4), bride/groom persegi (1:1).
   photos: {
