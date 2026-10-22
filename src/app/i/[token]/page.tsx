@@ -69,12 +69,14 @@ export default async function Invitation({ params }: { params: Promise<{ token: 
       {event.photos.gallery.length > 0 && (
         <Reveal as="section" className="block">
           <h3 className="script" style={{ fontSize: 32 }}>Galeri Kami</h3>
+        <img className="divider" src="/floral/border.webp" alt="" />
           <Gallery photos={event.photos.gallery} />
         </Reveal>
       )}
 
       <Reveal as="section" className="block card">
         <h3>Acara</h3>
+        <img className="divider" src="/floral/border.webp" alt="" />
         <p><strong>{event.dateText}</strong><br />{event.timeText}</p>
         <p><strong>{event.venue}</strong><br />{event.address}</p>
         <a className="btn" href={event.mapsUrl} target="_blank" rel="noreferrer">Buka Peta</a>
@@ -82,11 +84,13 @@ export default async function Invitation({ params }: { params: Promise<{ token: 
 
       <Reveal as="section" className="block card">
         <h3>Konfirmasi Kehadiran</h3>
+        <img className="divider" src="/floral/border.webp" alt="" />
         <Rsvp token={guest.token} initial={guest.rsvp} />
       </Reveal>
 
       <Reveal as="section" className="block card">
         <h3>QR Code Check-in</h3>
+        <img className="divider" src="/floral/border.webp" alt="" />
         <p className="muted small">
           Tunjukkan QR ini kepada petugas saat tiba di lokasi.
           QR hanya berlaku <strong>satu kali</strong> untuk {guest.pax} orang.
@@ -96,6 +100,7 @@ export default async function Invitation({ params }: { params: Promise<{ token: 
 
       <Reveal as="section" className="block card">
         <h3>Buku Ucapan</h3>
+        <img className="divider" src="/floral/border.webp" alt="" />
         <Wishes token={guest.token} guestId={guest.id} initial={wishes} />
       </Reveal>
 

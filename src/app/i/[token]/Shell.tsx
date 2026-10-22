@@ -12,6 +12,11 @@ export default function Shell({
   name, bride, groom, music, children,
 }: { name: string; bride: string; groom: string; music: string; children: React.ReactNode }) {
   const [phase, setPhase] = useState<Phase>("closed");
+
+  // ?preview=1 melewati cover untuk memeriksa isi undangan.
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).has("preview")) setPhase("open");
+  }, []);
   const [playing, setPlaying] = useState(false);
   const [hasMusic, setHasMusic] = useState(true);
   const audio = useRef<HTMLAudioElement>(null);
@@ -44,7 +49,7 @@ export default function Shell({
       {phase !== "open" && (
         <div className={phase === "opening" ? "cover leaving" : "cover"}>
           <div className="ring r1" /><div className="ring r2" />
-          <Floral className="fl tl" /><Floral className="fl tr" /><Floral className="fl bl" /><Floral className="fl br" />
+          <Floral spot="cover-tl" /><Floral spot="cover-tr" /><Floral spot="cover-bl" /><Floral spot="cover-br" />
           <p className="eyebrow cv" style={delay(200)}>The Wedding Of</p>
           <h1 className="script names cv" style={delay(500)}>{bride} <span>&amp;</span> {groom}</h1>
           <div className="orn cv" style={delay(800)}><i /><b>✦</b><i /></div>
@@ -62,7 +67,7 @@ export default function Shell({
 
       {phase !== "closed" && (
         <div className="page-floral" aria-hidden="true">
-          <Floral className="fl tl" /><Floral className="fl br" />
+          <Floral spot="page-tl" /><Floral spot="page-br" />
         </div>
       )}
 
