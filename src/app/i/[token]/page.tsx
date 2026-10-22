@@ -127,6 +127,7 @@ export default async function Invitation({ params }: { params: Promise<{ token: 
         <div className="fl-foot" aria-hidden="true" />
         <p className="calli thanks">Terima Kasih</p>
         <p>Merupakan suatu kehormatan atas kehadiran dan doa restu Anda.</p>
+        <p className="made">made with ❤️ by Panorama Digital</p>
         {event.musicCredit && <p className="credit">♫ {event.musicCredit}</p>}
       </footer>
     </main>

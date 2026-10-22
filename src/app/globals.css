@@ -223,7 +223,7 @@ footer { margin-top: 32px; }
 @media print { .protect canvas { visibility: hidden; } }
 
 /* ======================= DESAIN PREMIUM ======================= */
-.calli { font-family: var(--script); font-style: normal; font-weight: 400; line-height: 1.1; }
+.calli { font-family: var(--serif); font-style: italic; font-weight: 500; line-height: 1.15; }
 .eyebrow { font-family: var(--sans); font-weight: 400; font-size: 12px; letter-spacing: .42em; }
 
 /* Bingkai kartu berornamen */
@@ -262,7 +262,7 @@ footer { margin-top: 32px; }
 
 /* Mempelai */
 .couple { display: grid; gap: 24px; text-align: center; }
-.couple .calli { font-size: 42px; margin: 2px 0; }
+.couple .calli { font-size: 32px; margin: 2px 0; }
 .amp { font-family: var(--script); font-size: 52px; color: var(--gold); line-height: .5; }
 .fl-accent { width: 84px; height: 56px; margin: 2px auto 6px; background: var(--sprig) center/contain no-repeat; }
 
@@ -295,3 +295,6 @@ footer { margin-top: 32px; }
 .fl-foot { width: 118px; height: 86px; margin: 0 auto 8px; background: var(--blossoms) center/contain no-repeat; opacity: .95; }
 .thanks { font-size: 38px; color: var(--gold); margin-bottom: 6px; }
 footer.muted { text-align: center; padding: 26px 0 44px; }
+
+.made { font-family: var(--sans); font-size: 12px; letter-spacing: .04em; color: var(--muted); margin-top: 18px; }
+.footer .credit, footer .credit { margin-top: 6px; }
