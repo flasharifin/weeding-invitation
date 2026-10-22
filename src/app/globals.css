@@ -187,3 +187,24 @@ footer { margin-top: 32px; }
   .petals, .ring, .spark { display: none; }
   .btn.pulse, .portrait, .amp, .cover { animation: none !important; }
 }
+
+/* Ornamen bunga */
+.floral { position: absolute; width: min(46vw, 230px); height: auto; pointer-events: none; transform-origin: 0 0; }
+.floral.tl { top: 0; left: 0; animation: swayCorner 9s ease-in-out infinite; }
+.floral.tr { top: 0; right: 0; transform: scaleX(-1); transform-origin: 50% 50%; animation: swayCornerX 10s ease-in-out infinite; }
+.floral.bl { bottom: 0; left: 0; transform: scaleY(-1); transform-origin: 50% 50%; animation: swayCornerY 10s ease-in-out infinite; }
+.floral.br { bottom: 0; right: 0; transform: scale(-1, -1); transform-origin: 50% 50%; animation: swayCornerXY 9s ease-in-out infinite; }
+.cover .floral { z-index: 0; opacity: 0; animation-name: flIn, swayCorner; animation-duration: 1.4s, 9s; animation-delay: .2s, 1.6s; animation-fill-mode: both, none; animation-iteration-count: 1, infinite; }
+.cover .floral.tr { animation-name: flIn, swayCornerX; }
+.cover .floral.bl { animation-name: flIn, swayCornerY; }
+.cover .floral.br { animation-name: flIn, swayCornerXY; }
+.page-floral { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; opacity: .9; }
+.page-floral .floral { width: min(34vw, 190px); }
+.stage { position: relative; z-index: 1; }
+@keyframes flIn { from { opacity: 0; translate: -18px -18px; } to { opacity: 1; translate: 0 0; } }
+@keyframes swayCorner { 0%, 100% { rotate: 0deg; } 50% { rotate: 2.5deg; } }
+@keyframes swayCornerX { 0%, 100% { rotate: 0deg; } 50% { rotate: -2.5deg; } }
+@keyframes swayCornerY { 0%, 100% { rotate: 0deg; } 50% { rotate: -2.5deg; } }
+@keyframes swayCornerXY { 0%, 100% { rotate: 0deg; } 50% { rotate: 2.5deg; } }
+@media (prefers-reduced-motion: reduce) { .floral { animation: none !important; opacity: 1 !important; } }
+.cover > .floral { position: absolute; }

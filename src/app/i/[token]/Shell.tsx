@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import Petals from "./Petals";
+import Floral from "@/components/Floral";
 
 type Phase = "closed" | "opening" | "open";
 const delay = (n: number) => ({ "--d": n }) as React.CSSProperties;
@@ -43,6 +44,7 @@ export default function Shell({
       {phase !== "open" && (
         <div className={phase === "opening" ? "cover leaving" : "cover"}>
           <div className="ring r1" /><div className="ring r2" />
+          <Floral className="fl tl" /><Floral className="fl tr" /><Floral className="fl bl" /><Floral className="fl br" />
           <p className="eyebrow cv" style={delay(200)}>The Wedding Of</p>
           <h1 className="script names cv" style={delay(500)}>{bride} <span>&amp;</span> {groom}</h1>
           <div className="orn cv" style={delay(800)}><i /><b>✦</b><i /></div>
@@ -56,6 +58,12 @@ export default function Shell({
         <button className={playing ? "music playing" : "music"} onClick={toggle} aria-label={playing ? "Matikan musik" : "Putar musik"}>
           {playing ? "♫" : "♪"}
         </button>
+      )}
+
+      {phase !== "closed" && (
+        <div className="page-floral" aria-hidden="true">
+          <Floral className="fl tl" /><Floral className="fl br" />
+        </div>
       )}
 
       <div className={phase === "closed" ? "stage" : "stage on"}>{children}</div>
