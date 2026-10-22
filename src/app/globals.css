@@ -102,7 +102,10 @@ footer { margin-top: 32px; }
 @media print { .qrbox { display: none !important; } }
 
 /* Foto */
-.arch { position: relative; width: 100%; aspect-ratio: 3 / 4; margin: 0; overflow: hidden; border-radius: 999px 999px 18px 18px; border: 3px solid #fff; outline: 1px solid var(--gold); outline-offset: 5px; box-shadow: 0 10px 30px rgba(120, 90, 50, .18); }
+.arch { position: relative; width: 100%; aspect-ratio: 3 / 4; margin: 0; overflow: hidden; border-radius: 999px 999px 18px 18px; border: 3px solid #fff; outline: 1px solid var(--gold); outline-offset: 5px; box-shadow: 0 0 0 1px rgba(176, 138, 74, .35), 0 10px 30px rgba(120, 90, 50, .18); }
+.arch-flower { position: absolute; z-index: 3; width: 52%; height: auto; pointer-events: none; filter: drop-shadow(0 5px 9px rgba(120, 90, 50, .18)); }
+.arch-flower.left { top: -16%; left: -16%; transform: rotate(200deg); }
+.arch-flower.right { top: -13%; right: -15%; width: 42%; transform: scaleX(-1) rotate(205deg); }
 .portrait { position: relative; width: 150px; height: 150px; margin: 0 auto 10px; overflow: hidden; border-radius: 50%; border: 3px solid #fff; outline: 1px solid var(--gold); outline-offset: 4px; box-shadow: 0 6px 18px rgba(120, 90, 50, .15); }
 .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
 .gitem { position: relative; aspect-ratio: 3 / 4; border: 0; padding: 0; overflow: hidden; border-radius: 14px; background: var(--line); cursor: zoom-in; }
@@ -205,8 +208,8 @@ footer { margin-top: 32px; }
 @keyframes floraSway { 0%, 100% { rotate: -1.5deg; } 50% { rotate: 1.5deg; } }
 @media (prefers-reduced-motion: reduce) { .fl-img { animation: none !important; opacity: 1 !important; } }
 
-/* Pembatas border emas */
-.divider { display: block; width: min(260px, 70%); height: auto; margin: 2px auto 14px; opacity: .9; }
+/* Pembatas ornamen emas */
+.divider { display: block; width: min(220px, 64%); height: auto; margin: 4px auto 16px; color: var(--gold); }
 
 .shield canvas { visibility: hidden; }
 @media print { .protect canvas { visibility: hidden; } }

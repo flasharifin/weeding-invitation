@@ -1,36 +1,36 @@
-// Ornamen bunga cat air. Aset diletakkan di sudut/tepi section.
-// Satu <Floral> = satu rangkaian bunga di satu posisi.
+// Ornamen bunga cat air domain publik (Redouté, "Choix des plus belles fleurs", 1827).
+// Latar kertas sudah dipotong jadi transparan. Satu <Floral> = satu posisi.
 
 type Spot =
   | "cover-tl" | "cover-tr" | "cover-bl" | "cover-br"
   | "page-tl" | "page-br";
 
-// Tiap sudut dirangkai dari beberapa bunga agar terlihat bertumpuk alami.
+// Tangkai bunga tegak; di sudut atas dibuat menjuntai ke bawah, di sudut
+// bawah tumbuh ke atas. Ukuran & rotasi disetel per posisi.
 const CLUSTERS: Record<Spot, { src: string; style: React.CSSProperties; delay?: number }[]> = {
   "cover-tl": [
-    { src: "blossom", style: { width: "44%", left: "-10%", top: "-6%", transform: "rotate(-8deg)" } },
-    { src: "lavender", style: { width: "26%", left: "26%", top: "-10%", transform: "rotate(18deg)" }, delay: 1 },
-    { src: "cosmos", style: { width: "30%", left: "2%", top: "20%", transform: "rotate(-14deg)" }, delay: 2 },
+    { src: "roses-white", style: { width: "74%", left: "-14%", top: "-16%", transform: "rotate(205deg)" } },
+    { src: "blossoms", style: { width: "46%", left: "30%", top: "-10%", transform: "rotate(150deg)" }, delay: 1 },
   ],
   "cover-tr": [
-    { src: "amaryllis", style: { width: "40%", right: "-8%", top: "-8%", transform: "rotate(14deg)" } },
-    { src: "sprigs", style: { width: "30%", right: "22%", top: "-4%", transform: "rotate(-10deg)" }, delay: 2 },
+    { src: "rose-branch", style: { width: "70%", right: "-14%", top: "-14%", transform: "scaleX(-1) rotate(205deg)" } },
+    { src: "sprig", style: { width: "44%", right: "28%", top: "-8%", transform: "rotate(165deg)" }, delay: 1 },
   ],
   "cover-bl": [
-    { src: "carnation-peach", style: { width: "34%", left: "-6%", bottom: "-8%", transform: "rotate(6deg)" } },
-    { src: "violet", style: { width: "28%", left: "24%", bottom: "-4%", transform: "rotate(-12deg)" }, delay: 1 },
+    { src: "rose-yellow", style: { width: "66%", left: "-12%", bottom: "-14%", transform: "rotate(-12deg)" } },
+    { src: "lily-pink", style: { width: "42%", left: "30%", bottom: "-8%", transform: "rotate(16deg)" }, delay: 2 },
   ],
   "cover-br": [
-    { src: "carnation-white", style: { width: "40%", right: "-8%", bottom: "-10%", transform: "rotate(-8deg)" } },
-    { src: "lavender", style: { width: "24%", right: "26%", bottom: "-2%", transform: "scaleX(-1) rotate(12deg)" }, delay: 2 },
+    { src: "roses-white", style: { width: "70%", right: "-14%", bottom: "-14%", transform: "scaleX(-1) rotate(10deg)" } },
+    { src: "blossoms", style: { width: "42%", right: "28%", bottom: "-6%", transform: "rotate(-18deg)" }, delay: 2 },
   ],
   "page-tl": [
-    { src: "blossom", style: { width: "38%", left: "-8%", top: "-4%", transform: "rotate(-10deg)" } },
-    { src: "sprigs", style: { width: "26%", left: "22%", top: "-6%", transform: "rotate(12deg)" }, delay: 1 },
+    { src: "rose-branch", style: { width: "64%", left: "-14%", top: "-14%", transform: "rotate(200deg)" } },
+    { src: "blossoms", style: { width: "40%", left: "26%", top: "-8%", transform: "rotate(150deg)" }, delay: 1 },
   ],
   "page-br": [
-    { src: "amaryllis", style: { width: "36%", right: "-8%", bottom: "-4%", transform: "rotate(10deg)" } },
-    { src: "cosmos", style: { width: "26%", right: "22%", bottom: "-4%", transform: "scaleX(-1) rotate(-12deg)" }, delay: 2 },
+    { src: "rose-yellow", style: { width: "60%", right: "-12%", bottom: "-12%", transform: "scaleX(-1) rotate(-10deg)" } },
+    { src: "sprig", style: { width: "40%", right: "26%", bottom: "-6%", transform: "rotate(14deg)" }, delay: 2 },
   ],
 };
 

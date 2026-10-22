@@ -9,6 +9,7 @@ import Wishes from "./Wishes";
 import Gallery from "./Gallery";
 import Photo from "@/components/Photo";
 import Reveal from "./Reveal";
+import Divider from "@/components/Divider";
 
 const d = (n: number) => ({ "--d": n }) as React.CSSProperties;
 const SPARKS = [[-6, 12], [96, 6], [102, 46], [-10, 58], [4, 92], [92, 88]];
@@ -29,6 +30,8 @@ export default async function Invitation({ params }: { params: Promise<{ token: 
           <div className="arch">
             <Photo src={event.photos.cover} alt={`${event.bride} & ${event.groom}`} sizes="(max-width: 520px) 70vw, 300px" priority />
           </div>
+          <img className="arch-flower left" src="/floral/rose-branch.webp" alt="" aria-hidden="true" draggable={false} />
+          <img className="arch-flower right" src="/floral/rose-yellow.webp" alt="" aria-hidden="true" draggable={false} />
           {SPARKS.map(([l, t], i) => (
             <span key={i} className="spark" style={{ left: `${l}%`, top: `${t}%`, animationDelay: `${i * 0.45}s` }}>✦</span>
           ))}
@@ -69,14 +72,14 @@ export default async function Invitation({ params }: { params: Promise<{ token: 
       {event.photos.gallery.length > 0 && (
         <Reveal as="section" className="block">
           <h3 className="script" style={{ fontSize: 32 }}>Galeri Kami</h3>
-        <img className="divider" src="/floral/border.webp" alt="" />
+        <Divider />
           <Gallery photos={event.photos.gallery} />
         </Reveal>
       )}
 
       <Reveal as="section" className="block card">
         <h3>Acara</h3>
-        <img className="divider" src="/floral/border.webp" alt="" />
+        <Divider />
         <p><strong>{event.dateText}</strong><br />{event.timeText}</p>
         <p><strong>{event.venue}</strong><br />{event.address}</p>
         <a className="btn" href={event.mapsUrl} target="_blank" rel="noreferrer">Buka Peta</a>
@@ -84,13 +87,13 @@ export default async function Invitation({ params }: { params: Promise<{ token: 
 
       <Reveal as="section" className="block card">
         <h3>Konfirmasi Kehadiran</h3>
-        <img className="divider" src="/floral/border.webp" alt="" />
+        <Divider />
         <Rsvp token={guest.token} initial={guest.rsvp} />
       </Reveal>
 
       <Reveal as="section" className="block card">
         <h3>QR Code Check-in</h3>
-        <img className="divider" src="/floral/border.webp" alt="" />
+        <Divider />
         <p className="muted small">
           Tunjukkan QR ini kepada petugas saat tiba di lokasi.
           QR hanya berlaku <strong>satu kali</strong> untuk {guest.pax} orang.
@@ -100,7 +103,7 @@ export default async function Invitation({ params }: { params: Promise<{ token: 
 
       <Reveal as="section" className="block card">
         <h3>Buku Ucapan</h3>
-        <img className="divider" src="/floral/border.webp" alt="" />
+        <Divider />
         <Wishes token={guest.token} guestId={guest.id} initial={wishes} />
       </Reveal>
 
