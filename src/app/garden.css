@@ -1,0 +1,228 @@
+/* Garden invitation. Scoped to keep the administration and scanner independent. */
+.garden-site {
+  --bg: #f3ecdf;
+  --panel: #f8f2e7;
+  --ink: #58462e;
+  --muted: #796b56;
+  --gold: #876840;
+  --gold-soft: #bca07180;
+  --line: #c6b39380;
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --script: "Pinyon Script", "Cormorant Garamond", cursive;
+  color: var(--ink);
+  background: #e9e1d3;
+  font: 400 18px/1.6 var(--serif);
+  min-height: 100dvh;
+  overflow-x: clip;
+}
+.garden-site h1, .garden-site h2, .garden-site h3, .garden-site h4 { font-weight: 500; }
+.garden-site p { margin: 0 0 12px; }
+.garden-site .btn {
+  display: inline-flex; justify-content: center; align-items: center; gap: 10px;
+  min-height: 46px; padding: 11px 22px; border: 1px solid var(--gold);
+  border-radius: 7px; background: #80613c; color: #fff9ef;
+  font: 500 17px/1.3 var(--serif); letter-spacing: .02em; text-transform: none;
+  box-shadow: 0 3px 10px #5943210b;
+}
+.garden-site .btn.ghost { color: #725635; background: transparent; border: 1px solid #a58b65; }
+.garden-site .btn:hover:not(:disabled) { background: #6c5030; color: #fffaf0; transform: translateY(-1px); box-shadow: 0 4px 12px #59432120; }
+.garden-site :is(a, button, input, textarea):focus-visible { outline: 2px solid #71512e; outline-offset: 5px; }
+.garden-site .divider { width: 160px; margin: 20px auto; }
+.garden-site .divider i { width: 5px; height: 5px; }
+.garden-site .cnr { width: 56px; height: 56px; opacity: .8; }
+.garden-site .crest { margin-bottom: 6px; opacity: .85; }
+.garden-site .garden-eyebrow {
+  font-family: var(--serif); font-size: 11px; line-height: 1.7; letter-spacing: .24em;
+  text-transform: uppercase; margin-bottom: 18px;
+}
+.garden-site .garden-names {
+  font-family: var(--script); font-weight: 400; font-size: clamp(72px, 18vw, 102px);
+  line-height: .98; margin: 22px 0 14px; padding: 0 8px;
+}
+.garden-names span { display: block; padding-top: 7px; }
+.garden-site .garden-date { font-size: 18px; letter-spacing: .13em; }
+.garden-site .garden-script { display: block; font-family: var(--script); font-weight: 400; }
+.garden-desktop { display: none; }
+.garden-column { position: relative; max-width: 540px; margin: auto; background: var(--bg); box-shadow: 0 0 70px #49351c18; }
+.garden-cover {
+  position: fixed; inset: 0; z-index: 50; width: min(100%, 540px); margin: auto;
+  background: url('/garden/arch-garden.webp') center / 100% 100% no-repeat, var(--bg);
+  display: flex; flex-direction: column; align-items: center;
+  min-height: 100svh; overflow-y: auto; text-align: center;
+  padding: max(100px, 20svh) 40px max(24px, env(safe-area-inset-bottom));
+}
+.garden-cover-frame { position: absolute; inset: 9px; border: 1px solid #a38759b3; border-radius: 6px; pointer-events: none; }
+.garden-cover-frame::before { content: ''; position: absolute; inset: 4px; border: 1px solid #b89e6e70; border-radius: 3px; }
+.garden-cover-title { position: relative; }
+.garden-cover-title .garden-names { font-size: clamp(76px, 18vw, 106px); }
+.garden-cover-title .divider { margin: 18px auto 12px; }
+.garden-cover-title .garden-date { font-size: 17px; }
+.garden-recipient {
+  position: relative; margin-top: auto; width: min(100%, 340px); padding: 15px 17px 18px;
+  border: 1px solid #bba27a; outline: 3px solid #f4ecdcd9;
+  border-radius: 48% 48% 5px 5px / 17px 17px 5px 5px;
+  background: #f8f0e2ed; box-shadow: 0 7px 28px #4f43251c;
+}
+.garden-recipient p { font-size: 13px; margin: 1px 0 5px; }
+.garden-recipient h2 { font-size: 25px; line-height: 1.2; margin: 0 0 14px; overflow-wrap: anywhere; }
+.garden-recipient .btn { width: 100%; }
+.garden-preview-label { position: absolute; top: 18px; right: 18px; font: 10px var(--sans); letter-spacing: .1em; text-transform: uppercase; padding: 6px 9px; background: #faf4e9db; border-radius: 3px; }
+.garden-cover.is-leaving { animation: garden-open .8s cubic-bezier(.65, 0, .25, 1) forwards; pointer-events: none; }
+.garden-stage { visibility: hidden; }
+.garden-stage.is-open { visibility: visible; }
+.garden-stage:focus { outline: none; }
+.garden-preview-banner { padding: 8px 12px; text-align: center; background: #e9dcc7; font: 11px/1.6 var(--sans); letter-spacing: .02em; }
+.garden-invitation { padding: 0 12px 12px; text-align: center; }
+.garden-hero {
+  position: relative; min-height: 840px; height: 100svh; max-height: 1000px;
+  margin: 0 -12px; padding: 105px 36px 240px;
+  background: url('/garden/arch-garden.webp') center / 100% 100% no-repeat;
+  display: grid; align-items: start;
+}
+.garden-hero-copy { margin-top: 12%; }
+.garden-hero .garden-eyebrow { font-size: 10px; letter-spacing: .18em; }
+.garden-hero .garden-date { font-size: 16px; letter-spacing: .04em; }
+.garden-scroll { display: inline-flex; flex-direction: column; margin-top: 15px; gap: 5px; font-size: 13px; text-decoration: none; }
+.garden-scroll span { font-size: 22px; }
+.garden-section {
+  position: relative; isolation: isolate; padding: 86px 32px 46px; margin: 14px 0 0;
+  border: 1px solid #bda277; border-radius: 7px;
+  background: radial-gradient(ellipse at 45% 35%, #fffcf4aa, transparent 75%), #f4eddf;
+  scroll-margin-top: 16px;
+}
+.garden-section::before {
+  content: ''; position: absolute; inset: 5px; border: 1px solid #c4b08c9c;
+  border-radius: 4px; pointer-events: none; z-index: -1;
+}
+.garden-section::after {
+  content: ''; position: absolute; inset: 0 0 auto; height: 210px;
+  background: url('/garden/botanical-border.webp') center top / 100% auto no-repeat;
+  pointer-events: none; z-index: -1; opacity: .8;
+}
+.garden-heading { position: relative; margin-bottom: 20px; }
+.garden-heading .garden-eyebrow { font-size: 9px; letter-spacing: .17em; margin: 8px 0; }
+.garden-heading h2 { font-size: 38px; line-height: 1.15; margin: 8px 0; }
+.garden-heading .garden-script { font-size: 60px; line-height: 1.2; margin-top: 0; }
+.garden-intro { color: var(--muted); font-size: 16px; line-height: 1.65; }
+.garden-landscape {
+  height: 200px; margin: 30px -32px -46px; border-radius: 0 0 6px 6px;
+  background: url('/garden/arch-garden.webp') center bottom / 100% auto no-repeat;
+  mask-image: linear-gradient(transparent, #000 38%);
+  pointer-events: none;
+}
+.garden-quote { padding: 78px 32px 58px; }
+.garden-bismillah { font-size: 30px; line-height: 1.8; }
+.garden-quote .garden-eyebrow { font-size: 9px; margin: 18px 0; }
+.garden-quote blockquote { font-size: 19px; font-style: italic; line-height: 1.7; margin: 0; }
+.garden-verse { font-size: 12px; letter-spacing: .12em; }
+.garden-person { padding-top: 30px; }
+.garden-portrait { position: relative; width: 180px; height: 225px; margin: 0 auto 23px; border: 4px solid #f8edda; border-radius: 50%; outline: 1px solid #a17f46; outline-offset: 4px; box-shadow: 0 0 0 8px #d6bf8e66, 0 10px 20px #745c291c; overflow: hidden; }
+.garden-initial { display: grid; place-items: center; height: 100%; background: linear-gradient(#f9f1e4c9, #f9f1e480), url('/garden/arch-garden.webp') center / cover; }
+.garden-initial span { font-family: var(--script); font-size: 100px; padding-right: 12px; }
+.garden-person .garden-script { font-size: 62px; line-height: 1.1; margin: 4px 0; }
+.garden-fullname { font-size: 21px; line-height: 1.35; }
+.garden-parents { max-width: 290px; margin-inline: auto !important; font-size: 15px; color: var(--muted); }
+.garden-ampersand { display: flex; align-items: center; justify-content: center; gap: 16px; font: 42px var(--script); margin-top: 25px; }
+.garden-ampersand::before, .garden-ampersand::after { content: ''; width: 48px; height: 1px; background: var(--line); }
+.garden-site .countdown { gap: 9px; margin: 26px 0 36px; }
+.garden-site .countdown div { position: relative; width: 66px; padding: 10px 0 8px; border-radius: 2px; border-color: #bda27788; background: #fbf6eb; box-shadow: 0 3px 8px #745c2905; }
+.garden-site .countdown b { font-size: 29px; line-height: 1.2; }
+.garden-site .countdown span { font-family: var(--serif); font-size: 13px; text-transform: none; letter-spacing: 0; }
+.garden-event-card { position: relative; border: 1px solid #ac8c58; outline: 4px double #c7b18a; outline-offset: 4px; border-radius: 48% 48% 5px 5px / 65px 65px 5px 5px; background: #faf4e8e6; padding: 46px 20px 30px; }
+.garden-event-card h3 { font-size: 28px; line-height: 1.25; margin: 14px 0 22px; }
+.garden-weekday { font-size: 20px; margin-bottom: 0 !important; }
+.garden-day { font-size: 84px; line-height: 1.05; margin-bottom: 0 !important; }
+.garden-month { font-size: 15px; letter-spacing: .18em; text-transform: uppercase; }
+.garden-event-card h4 { font-size: 22px; line-height: 1.3; margin: 26px 0 12px; }
+.garden-address { font-size: 15px; line-height: 1.6; color: var(--muted); }
+.garden-event-actions { display: grid; gap: 10px; margin-top: 25px; }
+.garden-event-actions .btn { padding-inline: 10px; }
+.garden-gallery-section { padding-bottom: 38px; }
+.garden-site .gallery { gap: 12px; margin-top: 25px; }
+.garden-site .gitem { border: 3px solid #fffcf4; outline: 1px solid var(--line); border-radius: 80px 80px 4px 4px; }
+.garden-gallery-placeholder { min-height: 285px; margin-top: 24px; border: 1px solid var(--line); border-radius: 120px 120px 4px 4px; padding: 50px 20px 30px; background: linear-gradient(#f8efdfad, #f8efdfb8), url('/garden/arch-garden.webp') center 70% / cover; display: grid; align-content: center; }
+.garden-gallery-monogram { font: 72px var(--script); }
+.garden-gallery-monogram span { font-size: 38px; }
+.garden-gallery-placeholder p { font-size: 15px; }
+.garden-form { display: grid; gap: 9px; text-align: left; margin-top: 28px; }
+.garden-site :is(input, textarea) { font: 16px/1.5 var(--serif); padding: 11px 13px; color: var(--ink); background: #fbf7ee66; border: 1px solid #c8b89d; border-radius: 6px; }
+.garden-site textarea { resize: vertical; min-height: 120px; }
+.garden-site :is(input, textarea)::placeholder { color: #8a7a65; opacity: 1; }
+.garden-site input[readonly] { color: #80715c; }
+.garden-form label, .garden-form legend { font-size: 17px; }
+.garden-form fieldset { padding: 0; margin: 15px 0; border: 0; min-width: 0; }
+.garden-radio-row { display: flex; flex-wrap: wrap; gap: 10px 28px; margin-top: 6px; }
+.garden-radio-row label { display: flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.garden-site input[type=radio] { appearance: auto; accent-color: #80613c; width: 20px; height: 20px; margin: 0; }
+.garden-form > .btn { margin-top: 13px; }
+.garden-form-message { font-size: 14px; line-height: 1.5; margin: 0 !important; }
+.garden-form-message:empty { display: none; }
+.garden-rsvp .divider { margin: 38px auto; }
+.garden-wishes-heading { font-size: 32px; margin: 0 0 12px; }
+.garden-site .wishes { margin-top: 24px; padding-right: 5px; }
+.garden-site .wish { padding: 15px 0; }
+.garden-site .wish strong { font-size: 18px; font-weight: 600; }
+.garden-site .wish p { font-size: 16px; }
+.garden-site .small { font-size: 13px; }
+.garden-site .qrbox { margin-top: 25px; }
+.garden-site .qr { width: min(240px, 100%); height: auto; border-radius: 5px; }
+.garden-site .qrfull { color: var(--ink); font-family: var(--serif); }
+.garden-qr-preview { width: min(230px, 100%); margin: 25px auto 0; padding: 22px; border: 1px dashed #bca47d; background: #faf6ed; }
+.garden-qr-preview span { font-size: 55px; line-height: 1.1; }
+.garden-qr-preview p { font-size: 15px; }
+.garden-footer { margin-top: 14px; padding-top: 100px; }
+.garden-footer > .garden-script { font-size: 64px; line-height: 1.3; margin: 0 0 20px; }
+.garden-footer > p { font-size: 16px; }
+.garden-footer > .garden-eyebrow { font-size: 9px; }
+.garden-footer > .garden-signature { font-family: var(--script); font-size: 43px; margin-top: 25px; }
+.garden-footer > .garden-made { font-family: var(--sans); font-size: 9px; letter-spacing: .15em; }
+.garden-footer > .garden-credit { font-size: 11px; color: var(--muted); }
+.garden-music { position: fixed; right: max(18px, calc((100vw - 540px) / 2 + 18px)); bottom: max(18px, env(safe-area-inset-bottom)); z-index: 40; width: 46px; height: 46px; border: 1px solid #fff9ed; outline: 1px solid #a48a5f; border-radius: 50%; background: #80613c; color: #fff9ed; font-size: 25px; cursor: pointer; box-shadow: 0 4px 12px #51412430; }
+.garden-music.is-playing span { display: inline-block; animation: garden-music 3s ease-in-out infinite; }
+.garden-home { display: grid; align-content: center; justify-items: center; min-height: 100svh; padding: 50px 30px; text-align: center; background: linear-gradient(#f8efdfa0, #f8efdfa0), url('/garden/arch-garden.webp') center / cover; }
+.garden-home .garden-names { margin-bottom: 30px; }
+.garden-home > p:not(.garden-eyebrow) { max-width: 330px; }
+.garden-home .btn { margin-top: 20px; }
+@keyframes garden-open { to { opacity: 0; transform: translateY(-6%); } }
+@keyframes garden-music { 50% { transform: rotate(12deg); } }
+@media (min-width: 1000px) {
+  .garden-site { --column-width: 500px; --side-width: calc(100vw - var(--column-width)); }
+  .garden-desktop { display: block; position: fixed; inset: 0 auto 0 0; width: var(--side-width); height: 100dvh; text-align: center; background: url('/garden/arch-garden.webp') center 65% / cover no-repeat; border-right: 1px solid #b69c71; }
+  .garden-desktop-copy { position: absolute; top: 16%; left: 12%; right: 12%; }
+  .garden-desktop .garden-names { font-size: clamp(90px, 8vw, 140px); }
+  .garden-desktop .garden-names span { padding-top: 8px; }
+  .garden-desktop-note { font-style: italic; font-size: 20px; margin-top: 25px !important; }
+  .garden-desktop-bottom { position: absolute; bottom: 20px; left: 0; width: 100%; padding: 8px; font: 9px var(--sans); letter-spacing: .17em; background: #f7eddbb0; }
+  .garden-column { width: var(--column-width); max-width: none; margin: 0 0 0 auto; }
+  .garden-cover { left: auto; right: 0; width: var(--column-width); margin: 0; }
+  .garden-music { right: 20px; }
+}
+@media (min-width: 1500px) {
+  .garden-site { --column-width: 560px; }
+}
+@media (max-width: 380px) {
+  .garden-section { padding-left: 23px; padding-right: 23px; }
+  .garden-landscape { margin-left: -23px; margin-right: -23px; }
+  .garden-cover { padding-left: 32px; padding-right: 32px; }
+  .garden-cover-title .garden-names { font-size: 74px; }
+  .garden-site .garden-eyebrow { letter-spacing: .15em; }
+  .garden-heading h2 { font-size: 34px; }
+  .garden-event-card { padding-left: 16px; padding-right: 16px; }
+  .garden-site .countdown { gap: 6px; }
+  .garden-rsvp .row.between { flex-wrap: wrap; }
+}
+@media (max-height: 700px) {
+  .garden-cover { padding-top: 80px; }
+  .garden-cover-title .garden-names { font-size: 70px; }
+  .garden-cover-title .garden-eyebrow { margin-bottom: 8px; }
+  .garden-cover-title .divider { margin: 12px auto; }
+  .garden-recipient { margin-top: auto; }
+}
+@media (max-height: 520px) {
+  .garden-cover { padding-top: 40px; }
+  .garden-cover-title .garden-names { font-size: 52px; }
+  .garden-recipient { margin-top: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .garden-site *, .garden-site *::before, .garden-site *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

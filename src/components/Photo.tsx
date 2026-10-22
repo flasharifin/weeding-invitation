@@ -7,7 +7,7 @@ export default function Photo({
 }: { src: string; alt: string; sizes: string; priority?: boolean; className?: string }) {
   return (
     <Image
-      src={src} alt={alt} fill sizes={sizes} priority={priority} className={className}
+      src={src} alt={alt} fill sizes={sizes} preload={priority} className={className}
       style={{ objectFit: "cover" }} unoptimized={src.endsWith(".svg")}
     />
   );

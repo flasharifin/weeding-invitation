@@ -1,29 +1,30 @@
 "use client";
+
 import { useEffect, useRef, useState } from "react";
-import Petals from "./Petals";
-import Floral from "@/components/Floral";
+import Corners from "@/components/Corners";
+import Divider from "@/components/Divider";
 
-type Phase = "closed" | "opening" | "open";
-const delay = (n: number) => ({ "--d": n }) as React.CSSProperties;
-
-// Cover "Buka Undangan" + musik latar. Browser memblokir autoplay,
-// jadi musik baru dimulai setelah tamu menekan tombol buka.
-export default function Shell({
-  name, bride, groom, music, children,
-}: { name: string; bride: string; groom: string; music: string; children: React.ReactNode }) {
-  const [phase, setPhase] = useState<Phase>("closed");
-
-  // ?preview=1 melewati cover untuk memeriksa isi undangan.
-  useEffect(() => {
-    if (new URLSearchParams(window.location.search).has("preview")) setPhase("open");
-  }, []);
+export default function Shell({ name, bride, groom, date, music, preview = false, children }: {
+  name: string; bride: string; groom: string; date: string; music: string;
+  preview?: boolean; children: React.ReactNode;
+}) {
+  const [phase, setPhase] = useState<"closed" | "opening" | "open">("closed");
   const [playing, setPlaying] = useState(false);
   const [hasMusic, setHasMusic] = useState(true);
   const audio = useRef<HTMLAudioElement>(null);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const stage = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("preview") === "1") setPhase("open");
+    return () => { if (timer.current) clearTimeout(timer.current); };
+  }, []);
+
+  useEffect(() => {
+    const previous = document.body.style.overflow;
     document.body.style.overflow = phase === "open" ? "" : "hidden";
-    return () => { document.body.style.overflow = ""; };
+    if (phase === "open") stage.current?.focus({ preventScroll: true });
+    return () => { document.body.style.overflow = previous; };
   }, [phase]);
 
   function open() {
@@ -31,49 +32,62 @@ export default function Shell({
     setPhase("opening");
     audio.current?.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
     window.scrollTo(0, 0);
-    setTimeout(() => setPhase("open"), 1000); // sesuai durasi animasi coverOut
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    timer.current = setTimeout(() => setPhase("open"), reduced ? 0 : 800);
   }
 
   function toggle() {
-    const a = audio.current;
-    if (!a) return;
-    if (a.paused) a.play().then(() => setPlaying(true)).catch(() => {});
-    else { a.pause(); setPlaying(false); }
+    const player = audio.current;
+    if (!player) return;
+    if (player.paused) player.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    else { player.pause(); setPlaying(false); }
   }
 
   return (
-    <>
-      <audio ref={audio} src={music} loop preload="auto" onError={() => setHasMusic(false)} />
-      <Petals top={phase === "closed"} />
-
-      {phase !== "open" && (
-        <div className={phase === "opening" ? "cover leaving" : "cover"}>
-          <span className="cnr tl" aria-hidden="true" /><span className="cnr tr" aria-hidden="true" />
-          <span className="cnr bl" aria-hidden="true" /><span className="cnr br" aria-hidden="true" />
-          <Floral spot="cover-tl" /><Floral spot="cover-tr" /><Floral spot="cover-bl" /><Floral spot="cover-br" />
-          <div className="monogram cv" style={delay(150)}><span>{bride.charAt(0)}&nbsp;{groom.charAt(0)}</span></div>
-          <p className="eyebrow cv" style={delay(400)}>The Wedding Of</p>
-          <h1 className="names cv" style={delay(600)}>{bride} <span>&amp;</span> {groom}</h1>
-          <div className="divider cv" style={{ ...delay(850), maxWidth: 150 }}><i /></div>
-          <p className="muted cv" style={delay(1000)}>Kepada Yth.</p>
-          <h2 className="cv" style={{ ...delay(1200), margin: "4px 0 26px" }}>{name}</h2>
-          <button className="btn pulse cv" style={delay(1500)} onClick={open}>Buka Undangan</button>
+    <div className="garden-site">
+      <audio ref={audio} src={music} loop preload="none" onError={() => setHasMusic(false)} />
+      <aside className="garden-desktop" aria-label={`Pernikahan ${bride} dan ${groom}`}>
+        <div className="garden-desktop-copy">
+          <p className="garden-eyebrow">The wedding of</p>
+          <p className="garden-names">{bride}<span>&amp; {groom}</span></p>
+          <Divider />
+          <p className="garden-date">{date}</p>
+          <p className="garden-desktop-note">Sebuah awal, untuk selamanya.</p>
         </div>
-      )}
-
+        <p className="garden-desktop-bottom">WITH LOVE, FOR OUR DEAREST FAMILY &amp; FRIENDS</p>
+      </aside>
+      <div className="garden-column">
+        {phase !== "open" && (
+          <section className={`garden-cover ${phase === "opening" ? "is-leaving" : ""}`} aria-label="Sampul undangan">
+            <div className="garden-cover-frame"><Corners /></div>
+            {preview && <span className="garden-preview-label">Preview desain</span>}
+            <div className="garden-cover-title">
+              <p className="garden-eyebrow">The wedding of</p>
+              <h1 className="garden-names">{bride}<span>&amp; {groom}</span></h1>
+              <Divider />
+              <p className="garden-date">{date}</p>
+            </div>
+            <div className="garden-recipient">
+              <p>Kepada Yth. Bapak/Ibu/Saudara/i</p>
+              <h2>{name}</h2>
+              <button className="btn" onClick={open} disabled={phase === "opening"}>
+                <span aria-hidden="true">✉</span> {phase === "opening" ? "Membuka undangan…" : "Buka Undangan"}
+              </button>
+            </div>
+          </section>
+        )}
+        <div ref={stage} tabIndex={-1} inert={phase !== "open"} aria-hidden={phase !== "open"}
+          className={`garden-stage ${phase === "open" ? "is-open" : ""}`}>
+          {preview && <div className="garden-preview-banner">Preview desain · Formulir hanya untuk simulasi</div>}
+          {children}
+        </div>
+      </div>
       {phase === "open" && hasMusic && (
-        <button className={playing ? "music playing" : "music"} onClick={toggle} aria-label={playing ? "Matikan musik" : "Putar musik"}>
-          {playing ? "♫" : "♪"}
+        <button className={`garden-music ${playing ? "is-playing" : ""}`} onClick={toggle}
+          aria-label={playing ? "Matikan musik" : "Putar musik"} aria-pressed={playing}>
+          <span aria-hidden="true">{playing ? "♫" : "♪"}</span>
         </button>
       )}
-
-      {phase !== "closed" && (
-        <div className="page-floral" aria-hidden="true">
-          <Floral spot="page-tl" /><Floral spot="page-br" />
-        </div>
-      )}
-
-      <div className={phase === "closed" ? "stage" : "stage on"}>{children}</div>
-    </>
+    </div>
   );
 }

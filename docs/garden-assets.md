@@ -1,0 +1,17 @@
+# Garden illustration assets
+
+Generated using the built-in image_gen tool. Original artwork created for this project, inspired by the approved European garden design direction. No artwork downloaded from the reference website is shipped.
+
+- `public/garden/arch-garden.webp` — garden cover, desktop panel, section landscapes; 1024 × 1536 WebP.
+- `public/garden/botanical-border.webp` — botanical section decoration, transparent WebP.
+
+The PNG masters remain in the image generation output directory. These WebP copies are the assets consumed by the application.
+
+## Garden prompt
+
+Use case: illustration-story. Asset type: production website background for an elegant Indonesian wedding invitation, portrait 2:3, high resolution. Create a refined intricate hand-painted European garden illustration with the quality of antique engraved stationery gently colored in watercolor. Full bleed artwork, NO text, NO letters, NO numbers, NO people, NO UI, NO watermark, NO frame mockup.
+Composition extremely important: a classical weathered ivory stone arch outlines the extreme top and left/right edges, decorated with delicate winding sage-green vines, white roses, small lavender blossoms and butter-yellow wildflowers. Floral edge bands occupy only outer 12% on left and right. Top stone arch thin, peaking near top edge, opening into a large very pale warm ivory cloudy sky, which must occupy entire middle 65% of width from 15% to 58% of image height, unobstructed and low contrast, intentionally reserved for large live HTML wedding names. In lower 40%: romantic distant alpine mountains, small antique European village and a graceful original stone suspension bridge with two ornate towers across a still blue-sage river. Foreground classical stone balustrade, a few urn planters with flowers and lush garden at lower corners. The lowest middle area also has a pale stone terrace with empty visual space suitable for a live HTML guest name and button overlay. Deep layered perspective, beautiful fine botanical details, no blur. Muted ivory #F1EAE0, warm antique gold #837050, taupe, sage green, dusty lavender, soft cream yellow flowers. Keep shadows soft, never black. Vintage, romantic, luminous, elegant. This artwork must support readable text on top, with calm central sky, richer architecture and flowers along the edges and bottom. No human figures or wedding couples.
+
+## Botanical prompt
+
+Use case: illustration-story. Asset: transparent decorative botanical top border for a premium wedding invitation website. Wide landscape 3:2 canvas, true transparent background. A delicate asymmetric festoon of small ivory roses, fine sage green olive leaves, trailing lavender wisteria blossoms and tiny butter-yellow wildflowers. Antique botanical watercolor with delicate engraving detail, muted earthy elegant colors, match a European garden wedding on ivory parchment. All vegetation sits in the TOP 25 percent and along the extreme LEFT and RIGHT edges extending downward in delicate strands only 45 percent of canvas height. The entire central area and bottom half are fully transparent empty space for live text. Left top arrangement slightly fuller than right, organic natural vines sweeping softly along top edge. No vase, no architecture, no people, no lettering, no gold rectangular border, no shadows on background, no solid background. Finely detailed natural botanical artwork, not cartoon or vector.

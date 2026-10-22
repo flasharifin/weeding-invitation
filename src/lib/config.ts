@@ -11,7 +11,7 @@ export const event = {
   timeText: "10.00 WIB - selesai",
   venue: "Gedung Balai Prajurit RM Moedjono Poerbonegoro Puspenerbal Juanda",
   address: "Jl. Raya Bandara Juanda No.11, Sudimoro, Betro, Kec. Sedati,  Kabupaten Sidoarjo",
-  mapsUrl: "google.com/maps/place/Jl.+Raya+Bandara+Juanda+No.11,+Sudimoro,+Betro,+Kec.+Sidoarjo,+Kabupaten+Sidoarjo,+Jawa+Timur+61253/data=!4m2!3m1!1s0x2dd7e506abae97e3:0x698e5e3ce2cbf65?sa=X&ved=1t:242&ictx=111",
+  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Gedung+Balai+Prajurit+RM+Moedjono+Poerbonegoro+Puspenerbal+Juanda",
   quote:
     "Dan nikahkanlah orang-orang yang masih membujang di antara kamu, dan juga orang-orang yang layak (menikah) dari hamba-hamba sahayamu yang laki-laki dan perempuan.Jika mereka miskin, Allah akan memberi kemampuan kepada mereka dengan karunia-Nya. Dan Allah Maha luas (pemberian-Nya), Maha Mengetahui.",
   quoteSource: "QS. An-Nur: 32",
