@@ -86,7 +86,15 @@ export default function WeddingGift({ settings, name, token, preview = false }: 
       <div className="garden-gift-dialog-body">
         <p className="garden-gift-intro">Kirim tanda kasih melalui rekening, dompet digital, atau alamat berikut.</p>
         {preview && <p className="garden-gift-demo">Preview · Data contoh, jangan digunakan untuk transfer atau pengiriman.</p>}
+        {!settings.accounts.length && !settings.shipping && <p className="garden-gift-demo">Data rekening dan alamat penerima belum diisi. Formulir dapat dilengkapi setelah tujuan hadiah tersedia.</p>}
         <div className="garden-gift-cards">
+          {!settings.accounts.length && ["BNI", "BCA", "ShopeePay"].map(provider => <article className="garden-gift-card" key={provider}>
+            <p className={`garden-gift-provider gift-provider-${provider.toLowerCase()}`}>{provider}</p>
+            <div className="garden-gift-chip" aria-hidden="true" />
+            <p className="garden-gift-number">•••• •••• ••••</p>
+            <p className="garden-gift-owner">Rekening dan nama pemilik belum diisi</p>
+            <button className="btn garden-gift-copy" type="button" disabled>Belum tersedia</button>
+          </article>)}
           {settings.accounts.map(account => <article className="garden-gift-card" key={account.id}>
             <p className={`garden-gift-provider gift-provider-${account.id}`}>{account.provider}</p>
             <div className="garden-gift-chip" aria-hidden="true" />
@@ -94,6 +102,12 @@ export default function WeddingGift({ settings, name, token, preview = false }: 
             <p className="garden-gift-owner">a.n. {account.owner}</p>
             <button className="btn garden-gift-copy" type="button" onClick={() => copy(account.number, `Nomor ${account.provider}`)} aria-label={`Salin nomor ${account.provider}`}>▣ Salin</button>
           </article>)}
+          {!settings.shipping && <article className="garden-gift-card garden-gift-shipping">
+            <h3>Send a Gift</h3>
+            <p className="garden-gift-owner">Nama penerima belum diisi</p>
+            <p className="garden-gift-address">Alamat pengiriman hadiah belum tersedia.</p>
+            <button type="button" className="btn garden-gift-copy" disabled>Belum tersedia</button>
+          </article>}
           {settings.shipping && <article className="garden-gift-card garden-gift-shipping">
             <h3>Send a Gift</h3>
             <p className="garden-gift-owner">{settings.shipping.recipient}</p>
@@ -102,7 +116,7 @@ export default function WeddingGift({ settings, name, token, preview = false }: 
           </article>}
         </div>
         <p className="garden-gift-status" role="status">{copyStatus}</p>
-        {!settings.accounts.length && !settings.shipping ? <p className="garden-gift-empty">Informasi rekening dan alamat hadiah akan segera tersedia. Terima kasih atas doa dan kasih sayang Anda.</p> : <form className="garden-form garden-gift-form" onSubmit={confirm} onChange={() => { if (!submitted) setStatus(""); }}>
+        <form className="garden-form garden-gift-form" onSubmit={confirm} onChange={() => { if (!submitted) setStatus(""); }}>
           <h3>Konfirmasi Hadiah</h3>
           <p>Silakan lengkapi informasi berikut untuk membantu kami mengenali tanda kasih Anda.</p>
           <fieldset disabled={busy || submitted} className="garden-gift-fields"><label htmlFor="gift-sender">Nama pengirim</label>
@@ -119,9 +133,10 @@ export default function WeddingGift({ settings, name, token, preview = false }: 
           {kind === "money" ? <><label htmlFor="gift-amount">Nominal (Rp)</label><input id="gift-amount" name="amount" type="number" inputMode="numeric" placeholder="Contoh: 500000" min="1" max="999999999999" step="1" required /></>
             : <><label htmlFor="gift-description">Nama hadiah / nomor resi</label><input id="gift-description" name="description" placeholder="Contoh: Perlengkapan rumah · resi pengiriman" maxLength={250} required /></>}
           </fieldset>
+          {(kind === "money" ? !settings.accounts.length : !settings.shipping) && <p className="garden-gift-demo">Konfirmasi belum dapat dikirim karena {kind === "money" ? "rekening penerima" : "alamat penerima"} belum diisi.</p>}
           <button type="submit" className="btn" disabled={busy || submitted || (kind === "money" ? !settings.accounts.length : !settings.shipping)}>{busy ? "Menyimpan…" : submitted ? "Konfirmasi Tersimpan" : "Kirim Konfirmasi Hadiah"}</button>
           <p role="status" className="garden-gift-status">{status}</p>
-        </form>}
+        </form>
         <Divider />
         <p className="garden-gift-thanks">Terima kasih atas setiap tanda kasih Anda.</p>
       </div>
