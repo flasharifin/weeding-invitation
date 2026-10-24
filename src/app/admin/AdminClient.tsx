@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Guest, Wish } from "@/lib/db";
+import type { Guest, Wish, GiftConfirmation } from "@/lib/db";
 import { event } from "@/lib/config";
-import { fmtTime } from "@/lib/format";
+import { fmtTime, fmtDateTime } from "@/lib/format";
 
 function waLink(g: Guest, origin: string) {
   const url = `${origin}/i/${g.token}`;
@@ -17,10 +17,18 @@ function waLink(g: Guest, origin: string) {
   return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
 }
 
-export default function AdminClient({ initial, initialWishes }: { initial: Guest[]; initialWishes: Wish[] }) {
+export default function AdminClient({ initial, initialWishes, initialGifts }: { initial: Guest[]; initialWishes: Wish[]; initialGifts: GiftConfirmation[] }) {
   const router = useRouter();
   const [guests, setGuests] = useState(initial);
   const [wishes, setWishes] = useState(initialWishes);
+  const [gifts, setGifts] = useState(initialGifts);
+  const [tab, setTab] = useState<"guests" | "gifts">("guests");
+  const [giftQuery, setGiftQuery] = useState("");
+  const [giftKind, setGiftKind] = useState("all");
+  const [giftError, setGiftError] = useState("");
+  const shownGifts = gifts.filter(g => (giftKind === "all" || g.kind === giftKind) &&
+    `${g.sender} ${g.guestName} ${g.destination} ${g.description || ""}`.toLowerCase().includes(giftQuery.toLowerCase()));
+  const rupiah = (value: number) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(value);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [pax, setPax] = useState(1);
@@ -56,14 +64,17 @@ export default function AdminClient({ initial, initialWishes }: { initial: Guest
     const tick = async () => {
       if (document.hidden) return;
       try {
-        const [g, w] = await Promise.all([
+        const [g, w, gift] = await Promise.all([
           fetch("/api/guests", { cache: "no-store" }),
           fetch("/api/wishes", { cache: "no-store" }),
+          fetch("/api/gifts", { cache: "no-store" }),
         ]);
         if (g.ok) setGuests(await g.json());
         if (w.ok) setWishes(await w.json());
+        if (gift.ok) { setGifts(await gift.json()); setGiftError(""); }
+        else setGiftError(gift.status === 401 ? "Sesi login habis. Silakan login ulang." : "Pembaruan hadiah gagal. Data terakhir tetap ditampilkan.");
       } catch {
-        /* offline: coba lagi nanti */
+        setGiftError("Koneksi terputus. Data terakhir ditampilkan; pembaruan akan dicoba kembali.");
       }
     };
     const t = setInterval(tick, 5000);
@@ -161,7 +172,7 @@ export default function AdminClient({ initial, initialWishes }: { initial: Guest
     <main className="admin">
       <header className="row between wrap">
         <h1 style={{ margin: 0 }}>Dashboard Tamu</h1>
-        <div className="row">
+        <div className="row wrap">
           <a className="btn ghost" href="/api/export?type=guests" download>Ekspor Tamu (CSV)</a>
           <a className="btn ghost" href="/api/export?type=wishes" download>Ekspor Ucapan (CSV)</a>
           <a className="btn ghost" href="/scan">Scanner</a>
@@ -169,6 +180,11 @@ export default function AdminClient({ initial, initialWishes }: { initial: Guest
         </div>
       </header>
 
+      <nav className="row wrap admin-tabs" aria-label="Bagian dashboard">
+        <button className={`btn ${tab === "guests" ? "" : "ghost"}`} aria-pressed={tab === "guests"} onClick={() => setTab("guests")}>Tamu & Ucapan</button>
+        <button className={`btn ${tab === "gifts" ? "" : "ghost"}`} aria-pressed={tab === "gifts"} onClick={() => setTab("gifts")}>Wedding Gift ({gifts.length})</button>
+      </nav>
+      {tab === "guests" ? <>
       <div className="stats">
         <div><b>{stats.total}</b><span>Undangan</span></div>
         <div><b>{stats.pax}</b><span>Total orang</span></div>
@@ -237,6 +253,30 @@ export default function AdminClient({ initial, initialWishes }: { initial: Guest
         ))}
         {!wishes.length && <p className="muted">Belum ada ucapan.</p>}
       </div>
+      </> : <section className="stack admin-gifts" aria-labelledby="admin-gifts-title">
+        <h2 id="admin-gifts-title">Wedding Gift</h2>
+        <p className="muted">Konfirmasi dari tamu · diperbarui otomatis setiap 5 detik. Nominal merupakan laporan tamu dan belum diverifikasi dengan mutasi rekening.</p>
+        <div className="stats">
+          <div><b>{gifts.length}</b><span>Konfirmasi masuk</span></div>
+          <div><b>{gifts.filter(g => g.kind === "money").length}</b><span>Transfer uang</span></div>
+          <div><b>{gifts.filter(g => g.kind === "parcel").length}</b><span>Pengiriman hadiah</span></div>
+        </div>
+        <p className="card">Total nominal yang dilaporkan: <strong>{rupiah(gifts.reduce((sum, g) => sum + (g.amount || 0), 0))}</strong></p>
+        <div className="row wrap">
+          <label className="stack">Cari konfirmasi<input value={giftQuery} onChange={e => setGiftQuery(e.target.value)} placeholder="Nama, tujuan, atau resi…" /></label>
+          <div className="stack"><label htmlFor="admin-gift-kind">Jenis hadiah</label><select id="admin-gift-kind" value={giftKind} onChange={e => setGiftKind(e.target.value)}><option value="all">Semua jenis</option><option value="money">Transfer uang</option><option value="parcel">Kirim hadiah</option></select></div>
+        </div>
+        {giftError && <p role="status" className="note">{giftError}</p>}
+        <div className="list">
+          {shownGifts.map(g => <article className="card stack" key={g.id}>
+            <div className="row between wrap"><strong>{g.sender}</strong><span className="small muted">{fmtDateTime(g.createdAt)}</span></div>
+            <span className="small muted">Tamu undangan: {g.guestName}</span>
+            <span>{g.kind === "money" ? "Transfer uang" : "Kirim hadiah"} · {g.destination}</span>
+            {g.kind === "money" ? <strong>{rupiah(g.amount || 0)}</strong> : <p style={{ whiteSpace: "pre-wrap", overflowWrap: "anywhere" }}>Hadiah / resi: {g.description}</p>}
+          </article>)}
+          {!shownGifts.length && <p className="muted">{gifts.length ? "Tidak ada konfirmasi yang sesuai pencarian." : "Belum ada konfirmasi hadiah masuk."}</p>}
+        </div>
+      </section>}
     </main>
   );
 }

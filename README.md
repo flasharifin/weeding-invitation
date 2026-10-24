@@ -40,3 +40,11 @@ npm run build
 ```
 
 Produksi membutuhkan konfigurasi database dan autentikasi yang sudah digunakan project. Preview desain dapat dibuka tanpa database.
+
+Wedding Gift tampil di atas Doa & Ucapan. Isi rekening dan alamat asli di `src/lib/wedding-gift.ts` (`accounts` dan `shipping`). Formulir pada tautan tamu mengirim konfirmasi ke `/api/gifts` dan menyimpannya di tabel Postgres `gift_confirmations` (lokal tanpa DATABASE_URL: `data/gifts.json`). `/preview` tetap simulasi dan tidak menyimpan data contoh.
+
+Tab **Wedding Gift** di `/admin` menampilkan pengirim, tamu undangan, jenis, tujuan, nominal/keterangan, dan waktu. Mendukung pencarian, filter jenis, serta pembaruan setiap 5 detik. Data hanya dapat dibaca admin. Nominal merupakan laporan tamu, bukan bukti transfer terverifikasi. Pengiriman menggunakan ID unik agar percobaan ulang tidak menambah baris ganda. Data hadiah dipertahankan jika tamu dihapus.
+
+Tabel dibuat otomatis saat fitur diakses, atau melalui `npm run db:migrate`. Migrasi tidak menghapus data lama. Tidak ada ketergantungan WhatsApp untuk konfirmasi hadiah.
+
+Pengujian Wedding Gift: `npm run test:gifts` (Node.js 24+), memakai penyimpanan sementara dan fixture autentikasi/tujuan, tanpa mengubah database produksi.

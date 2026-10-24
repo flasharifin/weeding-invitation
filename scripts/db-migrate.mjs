@@ -1,7 +1,7 @@
 // Membuat tabel di Postgres (Neon) dan, opsional, memindahkan data lokal.
 //
 //   npm run db:migrate                 -> buat/perbarui tabel dari db/schema.sql
-//   npm run db:migrate -- --import     -> + impor data/guests.json & data/wishes.json (tanpa menimpa data yang sudah ada)
+//   npm run db:migrate -- --import     -> + impor data/guests.json, data/wishes.json & data/gifts.json (tanpa menimpa data yang sudah ada)
 //
 // DATABASE_URL dibaca dari environment atau .env.local.
 import fs from "node:fs";
@@ -25,7 +25,7 @@ try {
   for (const stmt of schema.split(";").map((s) => s.trim()).filter(Boolean)) {
     await sql.unsafe(stmt);
   }
-  console.log("✓ Skema siap (tabel guests, wishes)");
+  console.log("✓ Skema siap (tabel guests, wishes, gift_confirmations)");
 
   // 2) impor data lokal (opsional)
   if (process.argv.includes("--import")) {
@@ -35,7 +35,8 @@ try {
     };
     const guests = read("guests.json");
     const wishes = read("wishes.json");
-    let g = 0, w = 0;
+    const gifts = read("gifts.json");
+    let g = 0, w = 0, giftsAdded = 0;
     await sql.begin(async (tx) => {
       for (const x of guests) {
         const r = await tx`
@@ -51,8 +52,15 @@ try {
           ON CONFLICT DO NOTHING RETURNING id`;
         w += r.length;
       }
+      for (const x of gifts) {
+        const r = await tx`
+          INSERT INTO gift_confirmations (id, guest_id, guest_name, sender, kind, destination, amount, description, created_at)
+          VALUES (${x.id}, ${x.guestId}, ${x.guestName}, ${x.sender}, ${x.kind}, ${x.destination}, ${x.amount}, ${x.description}, ${x.createdAt})
+          ON CONFLICT DO NOTHING RETURNING id`;
+        giftsAdded += r.length;
+      }
     });
-    console.log(`✓ Impor: ${g}/${guests.length} tamu, ${w}/${wishes.length} ucapan (sisanya sudah ada, dilewati)`);
+    console.log(`✓ Impor: ${g}/${guests.length} tamu, ${w}/${wishes.length} ucapan, ${giftsAdded}/${gifts.length} hadiah (sisanya sudah ada, dilewati)`);
   }
 
   const [{ guests: ng }] = await sql`SELECT count(*)::int AS guests FROM guests`;

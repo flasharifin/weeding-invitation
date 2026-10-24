@@ -454,3 +454,74 @@
   .garden-dove-route, .garden-dove-perched { opacity: 1; }
   .garden-dove .garden-dove-flight, .garden-dove .garden-dove-landing { display: none; }
 }
+
+/* Wedding Gift: parchment invitation and a native, focus-trapped dialog. */
+.garden-gift { position: relative; padding: 26px 0; }
+.garden-gift-scroll {
+  position: relative; padding: 58px 22px 42px; border: 1px solid #b8a27b;
+  background: radial-gradient(ellipse at 50% 10%, #fff9e9, transparent 70%), repeating-linear-gradient(3deg, #ad926508 0 1px, transparent 1px 4px), #eee1c5;
+  box-shadow: inset 0 0 35px #9c7c4330, 0 12px 28px #705a2e18;
+  border-radius: 8px 8px 25px 25px / 8px 8px 8px 8px;
+}
+.garden-gift-scroll::before, .garden-gift-scroll::after {
+  content: ''; position: absolute; left: -9px; right: -9px; height: 25px; border: 1px solid #b7a17b; border-radius: 8px;
+  background: linear-gradient(#fff8e5, #e9dab9 45%, #b8a17c 85%, #e9dab9); box-shadow: 0 5px 7px #705a2e24;
+}
+.garden-gift-scroll::before { top: -12px; }
+.garden-gift-scroll::after { bottom: -12px; height: 18px; }
+.garden-gift h2 { font: 400 30px var(--serif); text-transform: uppercase; letter-spacing: .045em; margin: 14px 0; }
+.garden-gift-scroll > p:not(.garden-eyebrow) { font-size: 17px; line-height: 1.7; }
+.garden-site .garden-gift-trigger {
+  margin-top: 20px; padding: 10px 20px; border: 3px double #a58a5d; border-radius: 45%;
+  outline: 1px solid #b9a478; outline-offset: 3px; background: #fff9e780; color: #80643b;
+  text-transform: uppercase; letter-spacing: .06em; font-size: 14px; gap: 12px;
+}
+.garden-gift-trigger span { font-size: 24px; }
+.garden-gift-trigger span:last-child { transform: scaleX(-1); }
+.garden-site .garden-gift-dialog {
+  position: fixed; inset: 0; width: min(480px, calc(100vw - 24px)); max-width: none;
+  max-height: calc(100dvh - 32px); margin: auto; padding: 0; overflow-y: auto; overscroll-behavior: contain;
+  background: #faf6ee; color: var(--ink); border: 1px solid #b9a17b; border-radius: 16px;
+  box-shadow: 0 24px 90px #21170d55; font: 17px/1.5 var(--serif); text-align: center;
+}
+.garden-gift-dialog::backdrop { background: #241c16a6; backdrop-filter: blur(5px); }
+.garden-gift-dialog[open] { animation: garden-gift-enter .4s cubic-bezier(.16, 1, .3, 1); }
+.garden-gift-dialog-head { position: sticky; top: 0; z-index: 2; padding: 22px 48px 14px; background: #faf6eef5; border-bottom: 1px solid #c6b39360; }
+.garden-gift-dialog-head h2 { font-size: 27px; margin: 0; }
+.garden-gift-dialog-head .garden-eyebrow { margin: 0 0 5px; font-size: 9px; }
+.garden-gift-close { position: absolute; right: 8px; top: 12px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid #b9a17b; background: #faf6ee; color: #58462e; font: 30px/1 var(--serif); cursor: pointer; }
+.garden-gift-dialog-body { padding: 20px 14px 24px; }
+.garden-gift-intro { padding: 0 12px; }
+.garden-gift-demo { padding: 10px 12px; background: #eee4d0; border: 1px solid #d6c4a2; border-radius: 6px; font-size: 13px; }
+.garden-gift-cards { display: grid; gap: 13px; margin-top: 22px; }
+.garden-gift-card {
+  position: relative; isolation: isolate; overflow: hidden; min-height: 220px; padding: 18px; border-radius: 13px;
+  background: linear-gradient(125deg, #bcc8ce, #f9fbfc 52%, #c7d0d3); color: #263638; text-align: left;
+  box-shadow: 0 3px 6px #33333320; border: 1px solid #ffffff; display: flex; flex-direction: column; align-items: flex-start;
+}
+.garden-gift-card::before { content: ''; position: absolute; z-index: -1; width: 145%; height: 80%; left: -15%; top: 52%; border-radius: 50%; transform: rotate(-25deg); background: radial-gradient(circle, #fff 1px, transparent 1.8px) 0 0 / 7px 7px; opacity: .8; }
+.garden-gift-card .garden-gift-provider { align-self: flex-end; font: 700 italic 32px/1.2 Georgia, serif; margin-bottom: 12px; }
+.garden-gift-card .gift-provider-bni { color: #006775; }
+.garden-gift-card .gift-provider-bca { color: #06449a; }
+.garden-gift-card .gift-provider-shopeepay { color: #ed5635; font: 600 25px/1.5 var(--sans); }
+.garden-gift-chip { width: 43px; height: 32px; border: 1px solid #aa9355; border-radius: 7px; margin-bottom: 10px; background: linear-gradient(90deg, transparent 30%, #a28c5577 31% 33%, transparent 34% 67%, #a28c5577 68% 70%, transparent 71%), linear-gradient(0deg, transparent 47%, #a28c5577 48% 51%, transparent 52%), linear-gradient(135deg, #eedca1, #c6a85e); }
+.garden-gift-card .garden-gift-number { font: 600 21px/1.3 var(--sans); letter-spacing: .06em; margin-bottom: 3px; overflow-wrap: anywhere; user-select: all; }
+.garden-gift-card .garden-gift-owner { font: 500 14px/1.5 var(--sans); margin-bottom: 14px; overflow-wrap: anywhere; }
+.garden-site .garden-gift-copy { align-self: flex-end; margin-top: auto; min-height: 36px; padding: 6px 12px; border: 0; border-radius: 4px; background: #5a666a; color: white; font: 13px var(--sans); }
+.garden-gift-shipping h3 { align-self: center; font-size: 28px; margin: 0 0 14px; }
+.garden-gift-address { font-size: 16px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; user-select: all; }
+.garden-gift-status { font-size: 14px; margin: 12px 0 !important; }
+.garden-gift-status:empty { display: none; }
+.garden-gift-form { padding: 22px 16px; background: #eee9df; border: 1px solid #d6c9b3; border-radius: 12px; }
+.garden-gift-form h3 { font-size: 28px; text-align: center; margin: 0; }
+.garden-gift-form > p { text-align: center; font-size: 15px; }
+.garden-gift-form fieldset { margin: 8px 0; }
+.garden-gift-form fieldset label { display: flex; align-items: center; gap: 9px; font-size: 16px; min-height: 40px; }
+.garden-gift-form input[type=radio] { flex-shrink: 0; }
+.garden-gift-form input:not([type=radio]) { width: 100%; min-width: 0; background: #fffdf8; }
+.garden-gift-form .btn:disabled { opacity: .5; cursor: not-allowed; }
+.garden-gift-thanks { font-style: italic; font-size: 16px; }
+.garden-gift-empty { padding: 25px 15px; }
+@keyframes garden-gift-enter { from { opacity: 0; transform: translateY(22px) scale(.97); } to { opacity: 1; transform: none; } }
+.garden-gift-form .garden-gift-fields { display: grid; gap: 9px; margin: 0; }
+.garden-gift-form .garden-gift-fields > label { display: block; min-height: 0; }

@@ -11,6 +11,8 @@ import Photo from "./Photo";
 import Corners from "./Corners";
 import Divider from "./Divider";
 import { GardenDepth, GardenScene } from "./GardenMotion";
+import WeddingGift from "./WeddingGift";
+import { weddingGift, demoWeddingGift } from "@/lib/wedding-gift";
 
 type InvitationGuest = Pick<Guest, "id" | "name" | "token" | "pax" | "rsvp" | "checkedInAt">;
 
@@ -142,6 +144,8 @@ export default function Invitation({ guest, wishes = [], preview = false }: {
             <Heading>Konfirmasi <span className="garden-script">Kehadiran</span></Heading>
             <p className="garden-intro">Kami menantikan kehadiran Anda.<br />Mohon konfirmasi untuk melengkapi kebahagiaan kami.</p>
             <Rsvp token={guest.token} name={guest.name} pax={guest.pax} initial={guest.rsvp} preview={preview} />
+            <Divider />
+            <WeddingGift token={guest.token} settings={preview ? demoWeddingGift : weddingGift} name={guest.name} preview={preview} />
             <Divider />
             <h2 className="garden-wishes-heading">Doa &amp; Ucapan</h2>
             <p className="garden-intro">Doa tulus Anda adalah hadiah terindah bagi kami.</p>

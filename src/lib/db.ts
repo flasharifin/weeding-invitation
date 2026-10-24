@@ -121,6 +121,7 @@ export async function deleteGuest(id: string) {
   assertStorage();
   if (!sql) {
     writeFile(readFile().filter((g) => g.id !== id));
+    if (fs.existsSync(GIFT_FILE)) fs.writeFileSync(GIFT_FILE, JSON.stringify(readGifts().map(g => g.guestId === id ? { ...g, guestId: null } : g), null, 2));
     return writeWishes(readWishes().filter((w) => w.guestId !== id));
   }
   await init();
@@ -233,4 +234,64 @@ export async function deleteWish(id: string) {
   if (!sql) return writeWishes(readWishes().filter((w) => w.id !== id));
   await initWishes();
   await sql`DELETE FROM wishes WHERE id = ${id}`;
+}
+
+// ---------- Konfirmasi Wedding Gift (privat, hanya admin) ----------
+export type GiftConfirmation = {
+  id: string; guestId: string | null; guestName: string; sender: string;
+  kind: "money" | "parcel"; destination: string; amount: number | null;
+  description: string | null; createdAt: string;
+};
+export type NewGiftConfirmation = Pick<GiftConfirmation, "id" | "sender" | "kind" | "destination" | "amount" | "description">;
+const GIFT_FILE = path.join(process.cwd(), "data", "gifts.json");
+const readGifts = (): GiftConfirmation[] => fs.existsSync(GIFT_FILE) ? JSON.parse(fs.readFileSync(GIFT_FILE, "utf8")) : [];
+let giftReady: Promise<unknown> | null = null;
+function initGifts() {
+  giftReady ??= init().then(() => sql!`
+    CREATE TABLE IF NOT EXISTS gift_confirmations (
+      id text PRIMARY KEY,
+      guest_id text REFERENCES guests(id) ON DELETE SET NULL,
+      guest_name text NOT NULL,
+      sender text NOT NULL CHECK (char_length(sender) BETWEEN 1 AND 120),
+      kind text NOT NULL CHECK (kind IN ('money', 'parcel')),
+      destination text NOT NULL,
+      amount bigint,
+      description text,
+      created_at timestamptz NOT NULL DEFAULT now(),
+      CHECK ((kind = 'money' AND amount IS NOT NULL AND amount BETWEEN 1 AND 999999999999 AND description IS NULL)
+        OR (kind = 'parcel' AND amount IS NULL AND char_length(description) BETWEEN 1 AND 250 AND description IS NOT NULL))
+    )`);
+  return giftReady;
+}
+
+export async function saveGift(token: string, input: NewGiftConfirmation): Promise<boolean> {
+  const guest = await getGuestByToken(token);
+  if (!guest) return false;
+  if (!sql) {
+    const all = readGifts();
+    const existing = all.find(g => g.id === input.id);
+    if (existing) return existing.guestId === guest.id;
+    all.push({ ...input, guestId: guest.id, guestName: guest.name, createdAt: new Date().toISOString() });
+    fs.mkdirSync(path.dirname(GIFT_FILE), { recursive: true });
+    fs.writeFileSync(GIFT_FILE, JSON.stringify(all, null, 2));
+    return true;
+  }
+  await initGifts();
+  const rows = await sql`
+    INSERT INTO gift_confirmations (id, guest_id, guest_name, sender, kind, destination, amount, description)
+    VALUES (${input.id}, ${guest.id}, ${guest.name}, ${input.sender}, ${input.kind}, ${input.destination}, ${input.amount}, ${input.description})
+    ON CONFLICT (id) DO NOTHING RETURNING id`;
+  if (rows.length) return true;
+  const existing = await sql`SELECT id FROM gift_confirmations WHERE id = ${input.id} AND guest_id = ${guest.id}`;
+  return existing.length > 0;
+}
+
+export async function listGifts(): Promise<GiftConfirmation[]> {
+  assertStorage();
+  if (!sql) return readGifts().sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  await initGifts();
+  const rows = await sql`SELECT * FROM gift_confirmations ORDER BY created_at DESC, id DESC`;
+  return rows.map(r => ({ id: r.id, guestId: r.guest_id, guestName: r.guest_name, sender: r.sender,
+    kind: r.kind, destination: r.destination, amount: r.amount === null ? null : Number(r.amount),
+    description: r.description, createdAt: new Date(r.created_at).toISOString() }));
 }

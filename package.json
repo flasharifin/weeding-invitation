@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test:gifts": "node --test tests/gifts.test.mjs",
     "start": "next start",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/db-migrate.mjs"
   },

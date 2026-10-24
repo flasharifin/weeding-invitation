@@ -5,3 +5,5 @@ data/guests.json
 .env
 next-env.d.ts
 data/wishes.json
+
+data/gifts.json

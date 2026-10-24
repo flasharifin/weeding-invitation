@@ -298,3 +298,7 @@ footer.muted { text-align: center; padding: 26px 0 44px; }
 
 .made { font-family: var(--sans); font-size: 12px; letter-spacing: .04em; color: var(--muted); margin-top: 18px; }
 .footer .credit, footer .credit { margin-top: 6px; }
+
+.admin > *, .admin-gifts > * { min-width: 0; }
+.admin-gifts .card { overflow-wrap: anywhere; }
+.admin-gifts select { max-width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: white; color: var(--ink); font: inherit; }
