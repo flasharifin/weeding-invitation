@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "storage:check": "node --env-file-if-exists=.env.local scripts/object-storage.mjs",
+    "storage:verify": "node --env-file-if-exists=.env.local scripts/object-storage.mjs --write",
     "storage:migrate": "node --env-file-if-exists=.env.local scripts/object-storage.mjs --migrate",
     "test:storage": "node --test tests/object-storage.test.mjs",
     "test:memories": "node --test tests/memories.test.mjs",

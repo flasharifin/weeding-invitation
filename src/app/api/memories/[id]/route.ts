@@ -16,5 +16,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     if (photo.objectKey) return new Response(null, { status: 307, headers: { ...headers, Location: await memoryDownloadUrl(photo.objectKey) } });
     if (!photo.image) return missing();
     return new Response(new Uint8Array(photo.image), { headers: { ...headers, "Content-Type": "image/jpeg", "Content-Disposition": 'inline; filename="wedding-memory.jpg"' } });
-  } catch { return new Response("Foto belum dapat dimuat", { status: 503, headers }); }
+  } catch (cause) {
+    const e = cause as { name?: string; message?: string; $metadata?: { httpStatusCode?: number } };
+    console.error("[memories.image]", e?.name || "Error", e?.$metadata?.httpStatusCode ?? "", "-", e?.message || cause);
+    return new Response("Foto belum dapat dimuat", { status: 503, headers });
+  }
 }

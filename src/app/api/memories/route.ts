@@ -7,6 +7,14 @@ export const runtime = "nodejs";
 const headers = { "Cache-Control": "private, no-store" };
 const error = (message: string, status: number) => NextResponse.json({ error: message }, { status, headers });
 
+// Log the real cause to the server (Vercel) log so storage failures are diagnosable.
+// S3 error name/message/status describe the problem and hold no secrets; the request
+// body, credentials and signed URLs are never logged, and the guest only sees a generic message.
+function logCause(scope: string, cause: unknown) {
+  const e = cause as { name?: string; message?: string; $metadata?: { httpStatusCode?: number } };
+  console.error(`[${scope}]`, e?.name || "Error", e?.$metadata?.httpStatusCode ?? "", "-", e?.message || cause);
+}
+
 export async function GET(req: Request) {
   const token = new URL(req.url).searchParams.get("token") || "";
   if (!token || token.length > 200) return error("Tautan undangan tidak valid.", 401);
@@ -14,7 +22,7 @@ export async function GET(req: Request) {
     const guest = await getGuestByToken(token);
     if (!guest) return error("Tautan undangan tidak valid.", 401);
     return NextResponse.json({ photos: await listMemories(guest.id), limit: MEMORY_LIMIT }, { headers });
-  } catch { return error("Foto belum dapat dimuat. Silakan coba lagi.", 503); }
+  } catch (cause) { logCause("memories.GET", cause); return error("Foto belum dapat dimuat. Silakan coba lagi.", 503); }
 }
 
 export async function POST(req: Request) {
@@ -50,5 +58,9 @@ export async function POST(req: Request) {
     if (result === "full") return error("Batas 10 foto untuk undangan Anda sudah tercapai.", 409);
     if (result === "invalid") return error("Upload tidak valid.", 400);
     return NextResponse.json({ photos: await listMemories(guest.id), limit: MEMORY_LIMIT }, { headers });
-  } catch (cause) { return error(cause instanceof StorageConfigurationError ? cause.message : "Foto belum tersimpan. Periksa koneksi dan coba lagi.", 503); }
+  } catch (cause) {
+    if (cause instanceof StorageConfigurationError) return error(cause.message, 503);
+    logCause("memories.POST", cause);
+    return error("Foto belum tersimpan. Periksa koneksi dan coba lagi.", 503);
+  }
 }
