@@ -3,7 +3,13 @@ import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand, Head
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 export class StorageConfigurationError extends Error {
-  constructor() { super("Penyimpanan foto belum dikonfigurasi lengkap. Silakan hubungi pengelola undangan."); }
+  // Guest-facing message stays generic; `detail` names the exact problem for logs & storage:check.
+  detail: string;
+  constructor(detail: string) {
+    super("Penyimpanan foto belum dikonfigurasi lengkap. Silakan hubungi pengelola undangan.");
+    this.name = "StorageConfigurationError";
+    this.detail = detail;
+  }
 }
 
 export function storageConfig() {
@@ -13,12 +19,28 @@ export function storageConfig() {
   const accessKeyId = process.env.S3_ACCESS_KEY_ID?.trim();
   const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY?.trim();
   const pathStyle = process.env.S3_FORCE_PATH_STYLE?.trim().toLowerCase();
-  if (!endpoint || !region || !bucket || !accessKeyId || !secretAccessKey ||
-    (pathStyle && pathStyle !== "true" && pathStyle !== "false")) throw new StorageConfigurationError();
+
+  const missing = ([["S3_ENDPOINT", endpoint], ["S3_REGION", region], ["S3_BUCKET", bucket],
+    ["S3_ACCESS_KEY_ID", accessKeyId], ["S3_SECRET_ACCESS_KEY", secretAccessKey]] as const)
+    .filter(([, value]) => !value).map(([name]) => name);
+  if (missing.length) throw new StorageConfigurationError(
+    `Variabel kosong atau tidak terbaca: ${missing.join(", ")}. Di Vercel, set di Settings → Environment Variables lalu Redeploy (.env.local tidak ikut ke Vercel).`);
+
+  if (pathStyle && pathStyle !== "true" && pathStyle !== "false")
+    throw new StorageConfigurationError(`S3_FORCE_PATH_STYLE harus "true" atau "false", bukan "${pathStyle}".`);
+
   let url: URL;
-  try { url = new URL(endpoint); } catch { throw new StorageConfigurationError(); }
-  if (url.protocol !== "https:" || url.username || url.password || url.search || url.hash || !["", "/"].includes(url.pathname)) throw new StorageConfigurationError();
-  return { endpoint: url.origin, region, bucket, credentials: { accessKeyId, secretAccessKey }, forcePathStyle: pathStyle === "true" };
+  try { url = new URL(endpoint!); } catch { throw new StorageConfigurationError(`S3_ENDPOINT bukan URL yang valid: "${endpoint}".`); }
+  if (url.protocol !== "https:")
+    throw new StorageConfigurationError(`S3_ENDPOINT harus diawali "https://" (terbaca "${url.protocol}//").`);
+  if (url.username || url.password)
+    throw new StorageConfigurationError("S3_ENDPOINT tidak boleh memuat user:password. Taruh kunci di S3_ACCESS_KEY_ID / S3_SECRET_ACCESS_KEY.");
+  if (url.search || url.hash)
+    throw new StorageConfigurationError("S3_ENDPOINT tidak boleh memuat query (?) atau anchor (#). Pakai URL dasar saja.");
+  if (!["", "/"].includes(url.pathname))
+    throw new StorageConfigurationError(`S3_ENDPOINT harus endpoint dasar tanpa path — hapus "${url.pathname}". Jangan sertakan nama bucket/file di endpoint; nama bucket ada di S3_BUCKET.`);
+
+  return { endpoint: url.origin, region: region!, bucket: bucket!, credentials: { accessKeyId: accessKeyId!, secretAccessKey: secretAccessKey! }, forcePathStyle: pathStyle === "true" };
 }
 
 function storage() {

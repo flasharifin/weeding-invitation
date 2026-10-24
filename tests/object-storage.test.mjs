@@ -11,7 +11,7 @@ test('S3 configuration, folders, image verification and private download links',
   const calls=[];let size=0;let corrupt=false;
   try {
     for(const k of names)delete process.env[k];
-    assert.throws(()=>storageConfig(),{name:'Error'});
+    assert.throws(()=>storageConfig(),{name:'StorageConfigurationError'});
     Object.assign(process.env,{S3_ENDPOINT:'https://storage.example.com',S3_REGION:'kencana',S3_BUCKET:'test-bucket',S3_ACCESS_KEY_ID:'test-key',S3_SECRET_ACCESS_KEY:'test-secret'});
     assert.equal(storageConfig().forcePathStyle,false);
     process.env.S3_FORCE_PATH_STYLE='true';assert.equal(storageConfig().forcePathStyle,true);

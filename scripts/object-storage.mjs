@@ -14,7 +14,9 @@ function describe(error) {
   const status = error?.$metadata?.httpStatusCode;
   const parts = [error?.name || 'Error'];
   if (status) parts[0] += ` (HTTP ${status})`;
-  if (error?.message) parts.push(`  ${error.message}`);
+  // `detail` is set by StorageConfigurationError and names the exact env problem.
+  if (error?.detail) parts.push(`  ${error.detail}`);
+  else if (error?.message) parts.push(`  ${error.message}`);
   if (error?.cause?.code && error.cause.code !== error?.name) parts.push(`  (${error.cause.code})`);
   return parts.join('\n');
 }

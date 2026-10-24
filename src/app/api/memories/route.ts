@@ -11,8 +11,8 @@ const error = (message: string, status: number) => NextResponse.json({ error: me
 // S3 error name/message/status describe the problem and hold no secrets; the request
 // body, credentials and signed URLs are never logged, and the guest only sees a generic message.
 function logCause(scope: string, cause: unknown) {
-  const e = cause as { name?: string; message?: string; $metadata?: { httpStatusCode?: number } };
-  console.error(`[${scope}]`, e?.name || "Error", e?.$metadata?.httpStatusCode ?? "", "-", e?.message || cause);
+  const e = cause as { name?: string; message?: string; detail?: string; $metadata?: { httpStatusCode?: number } };
+  console.error(`[${scope}]`, e?.name || "Error", e?.$metadata?.httpStatusCode ?? "", "-", e?.detail || e?.message || cause);
 }
 
 export async function GET(req: Request) {
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     if (result === "invalid") return error("Upload tidak valid.", 400);
     return NextResponse.json({ photos: await listMemories(guest.id), limit: MEMORY_LIMIT }, { headers });
   } catch (cause) {
-    if (cause instanceof StorageConfigurationError) return error(cause.message, 503);
+    if (cause instanceof StorageConfigurationError) { logCause("memories.POST.config", cause); return error(cause.message, 503); }
     logCause("memories.POST", cause);
     return error("Foto belum tersimpan. Periksa koneksi dan coba lagi.", 503);
   }
