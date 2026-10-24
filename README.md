@@ -31,6 +31,8 @@ Ilustrasi WebP tersimpan di `public/garden/`. Prompt dan asal aset tercatat di [
 
 Animasi kedalaman ada di `src/components/GardenMotion.tsx` dan `src/app/garden.css`: lapisan taman mengikuti kursor/scroll, bunga berayun, serta bingkai foto dan kartu acara memiliki kemiringan perspektif. Efek otomatis berhenti di luar layar, saat tab tersembunyi, atau saat perangkat mengaktifkan `prefers-reduced-motion`. Ponsel menggunakan scroll tanpa akses sensor gerak.
 
+Latar rumah berbunga menggunakan `public/garden/house-garden.webp`. Dua merpati pada sampul dan hero mengepak, mendarat di bunga, bertengger, lalu terbang kembali dalam siklus 24 detik dengan jeda masuk berbeda. Animasi memakai sprite transparan `public/garden/dove-sprites.webp`; reduced motion menampilkan pose bertengger statis. Detail aset dan prompt imagegen ada di [docs/dove-assets.md](docs/dove-assets.md).
+
 ## Pemeriksaan
 
 ```sh

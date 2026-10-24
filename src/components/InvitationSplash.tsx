@@ -20,12 +20,12 @@ export default function InvitationSplash({ bride, groom, onReveal, onComplete }:
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
     const started = performance.now();
     let previous = started;
-    const images = ["/garden/arch-garden.webp", "/garden/botanical-border.webp"].map(src => {
+    const images = ["/garden/house-garden.webp", "/garden/dove-sprites.webp", "/garden/botanical-border.webp"].map(src => {
       const image = new Image();
       image.src = src;
       return image;
     });
-    // Progress represents preparation of the two illustrations and fonts, not byte transfer.
+    // Progress represents preparation of the cover, illustrations, and fonts, not byte transfer.
     const resources = [...images.map(image => image.decode()), document.fonts.ready];
     resources.forEach(resource => {
       Promise.resolve(resource).catch(() => {}).then(() => { if (!disposed) settled++; });

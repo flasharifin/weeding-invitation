@@ -104,6 +104,15 @@ export function GardenScene({ variant = "hero" }: { variant?: "cover" | "hero" |
         <div className="garden-scene-light" />
         <div className="garden-scene-flowers garden-scene-left"><span /></div>
         <div className="garden-scene-flowers garden-scene-right"><span /></div>
+        {(variant === "cover" || variant === "hero") && <div className="garden-doves">
+          {(["left", "right"] as const).map(side => <div key={side} className={`garden-dove-route garden-dove-${side}`}>
+            <div className="garden-dove">
+              <span className="garden-dove-flight"><i /></span>
+              <span className="garden-dove-landing" />
+              <span className="garden-dove-perched"><i /></span>
+            </div>
+          </div>)}
+        </div>}
         {variant !== "landscape" && <div className="garden-pollen">
           {Array.from({ length: 8 }, (_, i) => <i key={i} style={{ "--pollen-index": i } as React.CSSProperties} />)}
         </div>}
