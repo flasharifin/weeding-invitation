@@ -5,17 +5,24 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "storage:check": "node --env-file-if-exists=.env.local scripts/object-storage.mjs",
+    "storage:migrate": "node --env-file-if-exists=.env.local scripts/object-storage.mjs --migrate",
+    "test:storage": "node --test tests/object-storage.test.mjs",
+    "test:memories": "node --test tests/memories.test.mjs",
     "test:gifts": "node --test tests/gifts.test.mjs",
     "start": "next start",
     "db:migrate": "node --env-file-if-exists=.env.local scripts/db-migrate.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1156.0",
+    "@aws-sdk/s3-request-presigner": "^3.1156.0",
     "html5-qrcode": "^2.3.8",
     "next": "^16.4.2",
     "postgres": "^3.4.9",
     "qrcode": "^1.5.4",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",

@@ -7,3 +7,6 @@ next-env.d.ts
 data/wishes.json
 
 data/gifts.json
+
+data/memories.json
+data/memories.json.tmp

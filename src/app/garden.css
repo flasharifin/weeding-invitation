@@ -541,3 +541,15 @@
 @keyframes garden-gift-enter { from { opacity: 0; transform: translateY(22px) scale(.97); } to { opacity: 1; transform: none; } }
 .garden-gift-form .garden-gift-fields { display: grid; gap: 9px; margin: 0; }
 .garden-gift-form .garden-gift-fields > label { display: block; min-height: 0; }
+
+.garden-memories-upload { padding: 28px 18px; border: 1px dashed #b69b6d; border-radius: 60px 60px 12px 12px; background: linear-gradient(#fffaf0c9, #eee4d3a6); }
+.garden-memories-camera { display: grid; place-items: center; margin: 0 auto 16px; width: 60px; height: 60px; border: 1px solid #bc9c65; border-radius: 50%; font-size: 34px; color: #8d7048; }
+.garden-memories-count { font: 500 24px var(--serif); font-variant-numeric: tabular-nums; }
+.garden-memories-hint { font: 13px/1.7 var(--serif); color: var(--muted); }
+.garden-memories-upload > .btn { margin: 12px 0 15px; }
+.garden-memories-upload .btn:disabled { opacity: .55; cursor: not-allowed; }
+.garden-memories-retry { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin: 12px 0; }
+.garden-memories-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 24px; }
+.garden-memories-grid figure { min-width: 0; margin: 0; padding: 7px; background: #fffcf4; border: 1px solid #c7b697; box-shadow: 0 4px 12px #5943210d; border-radius: 5px; }
+.garden-memories-grid img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border-radius: 3px; }
+.garden-memories-grid figcaption { padding: 8px 0 3px; font-size: 13px; color: var(--muted); }

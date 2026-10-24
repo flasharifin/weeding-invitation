@@ -39,3 +39,17 @@ CREATE TABLE IF NOT EXISTS gift_confirmations (
   CHECK ((kind = 'money' AND amount IS NOT NULL AND amount BETWEEN 1 AND 999999999999 AND description IS NULL)
     OR (kind = 'parcel' AND amount IS NULL AND char_length(description) BETWEEN 1 AND 250 AND description IS NOT NULL))
 );
+
+CREATE TABLE IF NOT EXISTS memory_photos (
+  id text PRIMARY KEY,
+  guest_id text NOT NULL REFERENCES guests(id) ON DELETE CASCADE,
+  slot smallint NOT NULL CHECK (slot BETWEEN 1 AND 10),
+  image bytea CHECK (octet_length(image) BETWEEN 1 AND 1048576),
+  object_key text,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (guest_id, slot)
+);
+
+-- Upgrade existing photo tables without removing legacy photos.
+ALTER TABLE memory_photos ADD COLUMN IF NOT EXISTS object_key text;
+ALTER TABLE memory_photos ALTER COLUMN image DROP NOT NULL;

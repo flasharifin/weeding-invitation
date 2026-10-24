@@ -2,6 +2,7 @@ import { randomBytes, randomUUID } from "crypto";
 import fs from "fs";
 import path from "path";
 import postgres from "postgres";
+import { memoryObjectKey, uploadMemoryObject, deleteMemoryObject } from "@/lib/object-storage";
 
 export type Guest = {
   id: string;
@@ -121,6 +122,7 @@ export async function deleteGuest(id: string) {
   assertStorage();
   if (!sql) {
     writeFile(readFile().filter((g) => g.id !== id));
+    if (fs.existsSync(MEMORY_FILE)) fs.writeFileSync(MEMORY_FILE, JSON.stringify(readMemories().filter(m => m.guestId !== id)));
     if (fs.existsSync(GIFT_FILE)) fs.writeFileSync(GIFT_FILE, JSON.stringify(readGifts().map(g => g.guestId === id ? { ...g, guestId: null } : g), null, 2));
     return writeWishes(readWishes().filter((w) => w.guestId !== id));
   }
@@ -295,3 +297,154 @@ export async function listGifts(): Promise<GiftConfirmation[]> {
     kind: r.kind, destination: r.destination, amount: r.amount === null ? null : Number(r.amount),
     description: r.description, createdAt: new Date(r.created_at).toISOString() }));
 }
+
+// ---------- Sharing Memories ----------
+// New images live in S3. The nullable legacy image column supports older uploads.
+const MEMORY_FILE = path.join(process.cwd(), "data", "memories.json");
+type StoredMemory = import("./memories").MemoryPhoto & { image?: string; objectKey?: string };
+const readMemories = (): StoredMemory[] => fs.existsSync(MEMORY_FILE) ? JSON.parse(fs.readFileSync(MEMORY_FILE, "utf8")) : [];
+function writeMemories(items: StoredMemory[]) {
+  fs.mkdirSync(path.dirname(MEMORY_FILE), { recursive: true });
+  fs.writeFileSync(`${MEMORY_FILE}.tmp`, JSON.stringify(items));
+  fs.renameSync(`${MEMORY_FILE}.tmp`, MEMORY_FILE);
+}
+let memoryReady: Promise<unknown> | null = null;
+function initMemories() {
+  memoryReady ??= init().then(async () => {
+    await sql!`CREATE TABLE IF NOT EXISTS memory_photos (
+      id text PRIMARY KEY,
+      guest_id text NOT NULL REFERENCES guests(id) ON DELETE CASCADE,
+      slot smallint NOT NULL CHECK (slot BETWEEN 1 AND 10),
+      image bytea CHECK (octet_length(image) BETWEEN 1 AND 1048576),
+      object_key text,
+      created_at timestamptz NOT NULL DEFAULT now(),
+      UNIQUE (guest_id, slot)
+    )`;
+    await sql!`ALTER TABLE memory_photos ADD COLUMN IF NOT EXISTS object_key text`;
+    await sql!`ALTER TABLE memory_photos ALTER COLUMN image DROP NOT NULL`;
+  });
+  return memoryReady;
+}
+
+export async function listMemories(guestId: string): Promise<import("./memories").MemoryPhoto[]> {
+  assertStorage();
+  if (!sql) return readMemories().filter(m => m.guestId === guestId).map(({ image: _image, objectKey: _key, ...m }) => m);
+  await initMemories();
+  const rows = await sql`SELECT id, guest_id, slot, created_at FROM memory_photos WHERE guest_id = ${guestId} ORDER BY slot`;
+  return rows.map(r => ({ id: r.id, guestId: r.guest_id, slot: r.slot, createdAt: new Date(r.created_at).toISOString() }));
+}
+
+// Local JSON writes must also be serialized now that they await an S3 request.
+let localMemoryQueue: Promise<unknown> = Promise.resolve();
+async function localMemoryLock<T>(task: () => Promise<T>): Promise<T> {
+  const next = localMemoryQueue.then(task);
+  localMemoryQueue = next.catch(() => {});
+  return next;
+}
+
+async function cleanupUnreferencedMemory(id: string, key: string) {
+  try {
+    // A commit may have succeeded even if its acknowledgement was lost.
+    const current = await getMemory(id);
+    if (current?.objectKey !== key) await deleteMemoryObject(key);
+  } catch { console.error("Memory cleanup pending; verify unreferenced objects before removal."); }
+}
+
+export async function saveMemory(guestId: string, id: string, image: Buffer): Promise<"saved" | "full" | "invalid"> {
+  assertStorage();
+  if (!image.length || image.length > 1048576) return "invalid";
+  if (!sql) return localMemoryLock(async () => {
+    const guest = readFile().find(g => g.id === guestId);
+    if (!guest) return "invalid";
+    const all = readMemories();
+    const previous = all.find(m => m.id === id);
+    if (previous) return previous.guestId === guestId ? "saved" : "invalid";
+    const used = all.filter(m => m.guestId === guestId);
+    if (used.length >= 10) return "full";
+    const key = memoryObjectKey(guest.name, guest.id, id);
+    try {
+      await uploadMemoryObject(key, image);
+      if (!readFile().some(g => g.id === guestId)) {
+        await deleteMemoryObject(key);
+        return "invalid";
+      }
+      const fresh = readMemories();
+      fresh.push({ id, guestId, slot: used.length + 1, objectKey: key, createdAt: new Date().toISOString() });
+      writeMemories(fresh);
+      return "saved";
+    } catch (error) { await cleanupUnreferencedMemory(id, key); throw error; }
+  });
+  await initMemories();
+  let key: string | undefined;
+  try {
+    return await sql.begin(async tx => {
+      // Keep this guest locked until the upload and metadata commit complete.
+      const guest = await tx`SELECT id, name FROM guests WHERE id = ${guestId} FOR UPDATE`;
+      if (!guest.length) return "invalid" as const;
+      const existing = await tx`SELECT guest_id FROM memory_photos WHERE id = ${id}`;
+      if (existing.length) return existing[0].guest_id === guestId ? "saved" as const : "invalid" as const;
+      const [{ count }] = await tx`SELECT count(*)::int AS count FROM memory_photos WHERE guest_id = ${guestId}`;
+      if (count >= 10) return "full" as const;
+      key = memoryObjectKey(guest[0].name, guestId, id);
+      await uploadMemoryObject(key, image);
+      await tx`INSERT INTO memory_photos (id, guest_id, slot, object_key) VALUES (${id}, ${guestId}, ${count + 1}, ${key})`;
+      return "saved" as const;
+    });
+  } catch (error) { if (key) await cleanupUnreferencedMemory(id, key); throw error; }
+}
+
+export async function getMemory(id: string): Promise<{ guestId: string; image: Buffer | null; objectKey: string | null } | null> {
+  assertStorage();
+  if (!sql) {
+    const item = readMemories().find(m => m.id === id);
+    return item ? { guestId: item.guestId, image: item.image ? Buffer.from(item.image, "base64") : null, objectKey: item.objectKey || null } : null;
+  }
+  await initMemories();
+  const rows = await sql`SELECT guest_id, image, object_key FROM memory_photos WHERE id = ${id}`;
+  return rows[0] ? { guestId: rows[0].guest_id, image: rows[0].image, objectKey: rows[0].object_key } : null;
+}
+
+/** Explicit migration: verify each object before removing its old database bytes. */
+export async function migrateLegacyMemories() {
+  assertStorage();
+  let migrated = 0;
+  if (!sql) return localMemoryLock(async () => {
+    for (const item of readMemories().filter(m => m.image && !m.objectKey)) {
+      const guest = readFile().find(g => g.id === item.guestId);
+      if (!guest || !item.image) continue;
+      const key = memoryObjectKey(guest.name, guest.id, item.id);
+      try {
+        await uploadMemoryObject(key, Buffer.from(item.image, "base64"));
+        const fresh = readMemories();
+        const index = fresh.findIndex(m => m.id === item.id);
+        if (index === -1) { await deleteMemoryObject(key); continue; }
+        const { image: _image, ...record } = fresh[index];
+        fresh[index] = { ...record, objectKey: key };
+        writeMemories(fresh);
+        migrated++;
+      } catch (error) { await cleanupUnreferencedMemory(item.id, key); throw error; }
+    }
+    return migrated;
+  });
+  await initMemories();
+  const legacy = await sql`SELECT id, guest_id FROM memory_photos WHERE image IS NOT NULL AND object_key IS NULL`;
+  for (const item of legacy) {
+    let key: string | undefined;
+    try {
+      const changed = await sql.begin(async tx => {
+        const guest = await tx`SELECT id, name FROM guests WHERE id = ${item.guest_id} FOR UPDATE`;
+        if (!guest.length) return false;
+        const rows = await tx`SELECT image FROM memory_photos WHERE id = ${item.id} AND object_key IS NULL`;
+        if (!rows[0]?.image) return false;
+        key = memoryObjectKey(guest[0].name, item.guest_id, item.id);
+        await uploadMemoryObject(key, rows[0].image);
+        await tx`UPDATE memory_photos SET object_key = ${key}, image = NULL WHERE id = ${item.id}`;
+        return true;
+      });
+      if (changed) migrated++;
+    } catch (error) { if (key) await cleanupUnreferencedMemory(item.id, key); throw error; }
+  }
+  return migrated;
+}
+
+export async function closeDatabase() { await sql?.end(); }

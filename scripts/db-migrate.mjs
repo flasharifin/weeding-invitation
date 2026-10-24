@@ -25,7 +25,7 @@ try {
   for (const stmt of schema.split(";").map((s) => s.trim()).filter(Boolean)) {
     await sql.unsafe(stmt);
   }
-  console.log("✓ Skema siap (tabel guests, wishes, gift_confirmations)");
+  console.log("✓ Skema siap (tabel guests, wishes, gift_confirmations, memory_photos)");
 
   // 2) impor data lokal (opsional)
   if (process.argv.includes("--import")) {
@@ -36,7 +36,8 @@ try {
     const guests = read("guests.json");
     const wishes = read("wishes.json");
     const gifts = read("gifts.json");
-    let g = 0, w = 0, giftsAdded = 0;
+    const memories = read("memories.json");
+    let g = 0, w = 0, giftsAdded = 0, memoriesAdded = 0;
     await sql.begin(async (tx) => {
       for (const x of guests) {
         const r = await tx`
@@ -59,8 +60,15 @@ try {
           ON CONFLICT DO NOTHING RETURNING id`;
         giftsAdded += r.length;
       }
+      for (const x of memories) {
+        const r = await tx`
+          INSERT INTO memory_photos (id, guest_id, slot, image, object_key, created_at)
+          VALUES (${x.id}, ${x.guestId}, ${x.slot}, ${x.image ? Buffer.from(x.image, "base64") : null}, ${x.objectKey || null}, ${x.createdAt})
+          ON CONFLICT DO NOTHING RETURNING id`;
+        memoriesAdded += r.length;
+      }
     });
-    console.log(`✓ Impor: ${g}/${guests.length} tamu, ${w}/${wishes.length} ucapan, ${giftsAdded}/${gifts.length} hadiah (sisanya sudah ada, dilewati)`);
+    console.log(`✓ Impor: ${g}/${guests.length} tamu, ${w}/${wishes.length} ucapan, ${giftsAdded}/${gifts.length} hadiah, ${memoriesAdded}/${memories.length} foto (sisanya sudah ada, dilewati)`);
   }
 
   const [{ guests: ng }] = await sql`SELECT count(*)::int AS guests FROM guests`;

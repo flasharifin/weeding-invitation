@@ -12,6 +12,7 @@ import Corners from "./Corners";
 import Divider from "./Divider";
 import { GardenDepth, GardenScene } from "./GardenMotion";
 import WeddingGift from "./WeddingGift";
+import SharingMemories from "./SharingMemories";
 import { weddingGift, demoWeddingGift } from "@/lib/wedding-gift";
 
 type InvitationGuest = Pick<Guest, "id" | "name" | "token" | "pax" | "rsvp" | "checkedInAt">;
@@ -161,6 +162,14 @@ export default function Invitation({ guest, wishes = [], preview = false }: {
             <p className="garden-intro">Tunjukkan QR ini kepada petugas saat tiba di lokasi.<br />Berlaku satu kali untuk {guest.pax} orang.</p>
             {preview ? <div className="garden-qr-preview"><span aria-hidden="true">⌑</span><p>QR pribadi akan tampil<br />pada tautan undangan tamu.</p></div>
               : <Qr token={guest.token} name={guest.name} used={guest.checkedInAt} />}
+          </Reveal>
+        </section>
+
+        <section id="sharing-memories" className="garden-section garden-memories">
+          <Corners />
+          <Reveal>
+            <Heading eyebrow="Kenangan indah, dari Anda">Sharing <span className="garden-script">Memories</span></Heading>
+            <SharingMemories token={guest.token} preview={preview} />
           </Reveal>
         </section>
 
