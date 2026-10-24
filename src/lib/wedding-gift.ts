@@ -6,8 +6,12 @@ export type GiftSettings = {
 
 // Isi data asli sebelum mengaktifkan penerimaan hadiah.
 export const weddingGift: GiftSettings = {
-  accounts: [],
-  shipping: null,
+  accounts: [
+    { id: "bni", provider: "BNI", number: "1234567890", owner: "Shinta" },
+    { id: "bca", provider: "BCA", number: "1234567890", owner: "Ryan" },
+    { id: "shopeepay", provider: "ShopeePay", number: "08123456789", owner: "Shinta)" },
+  ],
+  shipping: { recipient: "Shinta & Ryan", address: "Alamat pengiriman hadiah akan ditambahkan." },
 };
 
 // Hanya untuk /preview; tidak pernah dipakai sebagai rekening undangan tamu.

@@ -90,14 +90,14 @@ export default function WeddingGift({ settings, name, token, preview = false }: 
         <div className="garden-gift-cards">
           {!settings.accounts.length && ["BNI", "BCA", "ShopeePay"].map(provider => <article className="garden-gift-card" key={provider}>
             <p className={`garden-gift-provider gift-provider-${provider.toLowerCase()}`}>{provider}</p>
-            <div className="garden-gift-chip" aria-hidden="true" />
+            <div className="garden-gift-seal" aria-hidden="true">❧</div>
             <p className="garden-gift-number">•••• •••• ••••</p>
             <p className="garden-gift-owner">Rekening dan nama pemilik belum diisi</p>
             <button className="btn garden-gift-copy" type="button" disabled>Belum tersedia</button>
           </article>)}
           {settings.accounts.map(account => <article className="garden-gift-card" key={account.id}>
             <p className={`garden-gift-provider gift-provider-${account.id}`}>{account.provider}</p>
-            <div className="garden-gift-chip" aria-hidden="true" />
+            <div className="garden-gift-seal" aria-hidden="true">❧</div>
             <p className="garden-gift-number">{account.number}</p>
             <p className="garden-gift-owner">a.n. {account.owner}</p>
             <button className="btn garden-gift-copy" type="button" onClick={() => copy(account.number, `Nomor ${account.provider}`)} aria-label={`Salin nomor ${account.provider}`}>▣ Salin</button>

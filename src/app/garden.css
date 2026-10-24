@@ -495,20 +495,36 @@
 .garden-gift-demo { padding: 10px 12px; background: #eee4d0; border: 1px solid #d6c4a2; border-radius: 6px; font-size: 13px; }
 .garden-gift-cards { display: grid; gap: 13px; margin-top: 22px; }
 .garden-gift-card {
-  position: relative; isolation: isolate; overflow: hidden; min-height: 220px; padding: 18px; border-radius: 13px;
-  background: linear-gradient(125deg, #bcc8ce, #f9fbfc 52%, #c7d0d3); color: #263638; text-align: left;
-  box-shadow: 0 3px 6px #33333320; border: 1px solid #ffffff; display: flex; flex-direction: column; align-items: flex-start;
+  position: relative; isolation: isolate; overflow: hidden; min-height: 245px; padding: 28px;
+  border-radius: 44px 8px 44px 8px; border: 1px solid #b8a078;
+  background: radial-gradient(ellipse at 0 0, #fffdf5, transparent 70%), linear-gradient(135deg, #f8f0de, #e9dcc2);
+  color: #55442d; text-align: left; box-shadow: 0 7px 20px #6c543a12;
+  display: flex; flex-direction: column; align-items: flex-start;
 }
-.garden-gift-card::before { content: ''; position: absolute; z-index: -1; width: 145%; height: 80%; left: -15%; top: 52%; border-radius: 50%; transform: rotate(-25deg); background: radial-gradient(circle, #fff 1px, transparent 1.8px) 0 0 / 7px 7px; opacity: .8; }
-.garden-gift-card .garden-gift-provider { align-self: flex-end; font: 700 italic 32px/1.2 Georgia, serif; margin-bottom: 12px; }
-.garden-gift-card .gift-provider-bni { color: #006775; }
-.garden-gift-card .gift-provider-bca { color: #06449a; }
-.garden-gift-card .gift-provider-shopeepay { color: #ed5635; font: 600 25px/1.5 var(--sans); }
-.garden-gift-chip { width: 43px; height: 32px; border: 1px solid #aa9355; border-radius: 7px; margin-bottom: 10px; background: linear-gradient(90deg, transparent 30%, #a28c5577 31% 33%, transparent 34% 67%, #a28c5577 68% 70%, transparent 71%), linear-gradient(0deg, transparent 47%, #a28c5577 48% 51%, transparent 52%), linear-gradient(135deg, #eedca1, #c6a85e); }
-.garden-gift-card .garden-gift-number { font: 600 21px/1.3 var(--sans); letter-spacing: .06em; margin-bottom: 3px; overflow-wrap: anywhere; user-select: all; }
-.garden-gift-card .garden-gift-owner { font: 500 14px/1.5 var(--sans); margin-bottom: 14px; overflow-wrap: anywhere; }
-.garden-site .garden-gift-copy { align-self: flex-end; margin-top: auto; min-height: 36px; padding: 6px 12px; border: 0; border-radius: 4px; background: #5a666a; color: white; font: 13px var(--sans); }
-.garden-gift-shipping h3 { align-self: center; font-size: 28px; margin: 0 0 14px; }
+.garden-gift-card::before {
+  content: ''; position: absolute; z-index: -1; inset: 0; pointer-events: none;
+  background: url('/garden/botanical-border.webp') right top / 120% auto no-repeat;
+  opacity: .2; mask-image: linear-gradient(110deg, transparent 35%, #000);
+}
+.garden-gift-card::after {
+  content: ''; position: absolute; inset: 8px; border: 1px solid #b89b6559;
+  border-radius: 36px 4px 36px 4px; pointer-events: none; z-index: -1;
+}
+.garden-gift-card .garden-gift-provider {
+  align-self: flex-start; color: #745a34; font: 500 30px/1.2 var(--serif);
+  letter-spacing: .08em; margin: 0 0 8px; padding-right: 15px;
+}
+.garden-gift-seal { width: 40px; height: 40px; display: grid; place-items: center; margin: 0 0 16px;
+  border: 1px solid #b79761; border-radius: 50%; box-shadow: 0 0 0 3px #b797611a;
+  color: #987540; font: 25px var(--serif); background: #fff9e980; }
+.garden-gift-card .garden-gift-number { font: 500 23px/1.4 var(--serif); letter-spacing: .08em; margin-bottom: 4px; overflow-wrap: anywhere; user-select: all; }
+.garden-gift-card .garden-gift-owner { font: 400 14px/1.6 var(--sans); margin-bottom: 20px; overflow-wrap: anywhere; }
+.garden-site .garden-gift-copy { align-self: flex-end; margin-top: auto; min-height: 40px; padding: 8px 16px;
+  border: 1px solid #a48755; border-radius: 24px; background: #80633d; color: #fff9ef; font: 12px var(--sans); }
+.garden-site .garden-gift-copy:disabled { opacity: .55; cursor: not-allowed; }
+.garden-gift-shipping { background: radial-gradient(ellipse at top left, #f7f6e9, transparent 70%), linear-gradient(135deg, #eef0e3, #dbe1cd); border-color: #9ca586; }
+.garden-gift-shipping h3 { align-self: flex-start; font: 400 34px/1.3 var(--script); margin: 5px 0 20px; color: #586344; }
+.garden-gift-shipping::after { border-color: #9ca58666; }
 .garden-gift-address { font-size: 16px; line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; user-select: all; }
 .garden-gift-status { font-size: 14px; margin: 12px 0 !important; }
 .garden-gift-status:empty { display: none; }
