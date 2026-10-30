@@ -4,7 +4,7 @@ export const event = {
   groom: "Ryan",
   brideFull: "Dita Shintya Marthatinova S.H., M.Kn",
   groomFull: "Ryan Tridarmanto Utomo",
-  brideParents: "Putri dari Bapak Sunaryo S. Sos & Ibu Dra. Rara Nunuk Setyoningsih",
+  brideParents: "Putri tunggal Bapak Sunaryo S.Sos & Ibu Dra Rara Nunuk",
   groomParents: "Putra dari Bapak Sulastono & Ibu Riah",
   dateISO: "2027-03-28T10:00:00+07:00",
   dateText: "Minggu, 28 Maret 2027",

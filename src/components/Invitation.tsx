@@ -83,7 +83,7 @@ export default function Invitation({ guest, wishes = [], preview = false }: {
           <Corners />
           <Reveal>
             <Heading eyebrow="Dengan penuh syukur dan bahagia">Mempelai</Heading>
-            <p className="garden-intro">Dengan memohon rahmat dan rida Allah SWT,<br />kami bermaksud menyelenggarakan pernikahan kami.</p>
+            <p className="garden-intro">Dengan memohon rahmat dan ridha Allah SWT,<br />kami bermaksud menyelenggarakan pernikahan putra putri kami.</p>
             <div className="garden-person">
               <Portrait src={event.photos.bride} name={event.bride} />
               <h3 className="garden-script">{event.bride}</h3>
@@ -177,7 +177,7 @@ export default function Invitation({ guest, wishes = [], preview = false }: {
           <Corners />
           <p className="garden-eyebrow">Atas kehadiran dan doa restu Anda</p>
           <h2 className="garden-script">Terima Kasih</h2>
-          <p>Merupakan suatu kehormatan dan kebahagiaan bagi kami<br />untuk merayakan hari istimewa ini bersama Anda.</p>
+          <p>Suatu kehormatan dan kebahagiaan untuk kami atas kehadiran saudara/i<br />untuk merayakan hari istimewa ini bersama Anda.</p>
           <p className="garden-signature">{event.bride} &amp; {event.groom}</p>
           <Divider />
           <p className="garden-made">MADE WITH ❤️ BY PANORAMA DIGITAL</p>
