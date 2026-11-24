@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Photo from "@/components/Photo";
 
 export default function Gallery({ photos }: { photos: string[] }) {
@@ -27,13 +28,15 @@ export default function Gallery({ photos }: { photos: string[] }) {
         ))}
       </div>
 
-      {open !== null && (
+      {/* Portal: section punya `isolation: isolate`, jadi z-index lightbox terkurung dan tertimpa section berikutnya. */}
+      {open !== null && createPortal(
         <div className="lightbox" onClick={() => setOpen(null)}>
           <div className="lbimg"><Photo src={photos[open]} alt={`Galeri ${open + 1}`} sizes="100vw" /></div>
           <button className="lbnav prev" onClick={(e) => { e.stopPropagation(); setOpen((open - 1 + photos.length) % photos.length); }} aria-label="Sebelumnya">‹</button>
           <button className="lbnav next" onClick={(e) => { e.stopPropagation(); setOpen((open + 1) % photos.length); }} aria-label="Berikutnya">›</button>
           <span className="lbcount">{open + 1} / {photos.length}</span>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );
