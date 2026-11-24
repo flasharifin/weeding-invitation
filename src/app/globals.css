@@ -117,7 +117,6 @@ footer { margin-top: 32px; }
 .portrait { position: relative; width: 150px; height: 150px; margin: 0 auto 10px; overflow: hidden; border-radius: 50%; border: 3px solid #fff; outline: 1px solid var(--gold); outline-offset: 4px; box-shadow: 0 6px 18px rgba(120, 90, 50, .15); }
 .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
 .gitem { position: relative; aspect-ratio: 3 / 4; border: 0; padding: 0; overflow: hidden; border-radius: 14px; background: var(--line); cursor: zoom-in; }
-.gitem:nth-child(4n+1), .gitem:nth-child(4n) { aspect-ratio: 4 / 5; }
 .lightbox { position: fixed; inset: 0; z-index: 70; background: rgba(20, 14, 10, .94); display: grid; place-items: center; cursor: zoom-out; }
 .lbimg { position: relative; width: min(92vw, 560px); height: 82dvh; }
 .lbimg img { object-fit: contain !important; }

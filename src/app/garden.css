@@ -344,7 +344,6 @@
   background: linear-gradient(115deg, transparent 25%, #fff9de55 47%, transparent 68%);
   opacity: .35; transform: translateX(calc(var(--motion-x) * 20%)); transition: transform .7s ease;
 }
-.garden-site .reveal.up:not(.in) { transform: perspective(1100px) translate3d(0, 35px, -30px) rotateX(5deg); }
 .garden-site .reveal { transition-duration: 1.1s; transform-origin: center top; }
 @keyframes garden-depth-enter {
   from { opacity: 0; transform: perspective(1000px) translate3d(0, 24px, -45px) rotateX(8deg); }
