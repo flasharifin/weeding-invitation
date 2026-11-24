@@ -141,6 +141,8 @@
 .garden-event-actions .btn { padding-inline: 10px; }
 .garden-gallery-section { padding-bottom: 38px; }
 .garden-site .gallery { gap: 12px; margin-top: 25px; }
+/* foto potret 2:3 di kotak 3:4/4:5: potong lebih banyak dari atas (langit-langit) agar kaki tidak terpotong */
+.garden-site .gitem img { object-position: 50% 75%; }
 .garden-site .gitem { border: 3px solid #fffcf4; outline: 1px solid var(--line); border-radius: 80px 80px 4px 4px; }
 .garden-gallery-placeholder { min-height: 285px; margin-top: 24px; border: 1px solid var(--line); border-radius: 120px 120px 4px 4px; padding: 50px 20px 30px; background: linear-gradient(#f8efdfad, #f8efdfb8), url('/garden/house-garden.webp') center 70% / cover; display: grid; align-content: center; }
 .garden-gallery-monogram { font: 72px var(--script); }

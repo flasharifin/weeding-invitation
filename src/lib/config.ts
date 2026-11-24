@@ -21,7 +21,11 @@ export const event = {
     cover: "/photos/cover.svg",
     bride: "/photos/bride.jpg",
     groom: "/photos/groom.svg",
-    gallery: ["/photos/gallery-1.svg", "/photos/gallery-2.svg", "/photos/gallery-3.svg", "/photos/gallery-4.svg"],
+    gallery: [
+      "/photos/gallery-01.jpg", "/photos/gallery-02.jpg", "/photos/gallery-03.jpg", "/photos/gallery-04.jpg",
+      "/photos/gallery-05.jpg", "/photos/gallery-06.jpg", "/photos/gallery-07.jpg", "/photos/gallery-08.jpg",
+      "/photos/gallery-09.jpg", "/photos/gallery-10.jpg", "/photos/gallery-11.jpg", "/photos/gallery-12.jpg",
+    ],
   },
   // Lagu latar. Pachelbel "Canon in D" (aransemen/rekaman Kevin MacLeod, CC BY 3.0 - wajib mencantumkan kredit).
   // Mengganti lagu: taruh file di /public lalu ubah musicUrl + musicCredit (kosongkan kredit jika lagu bebas atribusi).
