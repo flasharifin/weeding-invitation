@@ -19,7 +19,7 @@ export const event = {
   // Tips: kompres foto (maks ±1 MB, lebar ≤ 2000px). Cover & galeri portrait (3:4), bride/groom persegi (1:1).
   photos: {
     cover: "/photos/cover.svg",
-    bride: "/photos/bride.svg",
+    bride: "/photos/bride.jpg",
     groom: "/photos/groom.svg",
     gallery: ["/photos/gallery-1.svg", "/photos/gallery-2.svg", "/photos/gallery-3.svg", "/photos/gallery-4.svg"],
   },

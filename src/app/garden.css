@@ -121,7 +121,8 @@
 .garden-initial { display: grid; place-items: center; height: 100%; background: linear-gradient(#f9f1e4c9, #f9f1e480), url('/garden/house-garden.webp') center / cover; }
 .garden-initial span { font-family: var(--script); font-size: 100px; padding-right: 12px; }
 .garden-person .garden-script { font-size: 62px; line-height: 1.1; margin: 4px 0; }
-.garden-fullname { font-size: 21px; line-height: 1.35; }
+/* nowrap + font mengecil di HP agar nama & gelar tetap 1 baris */
+.garden-fullname { font-size: clamp(15px, 4.2vw, 21px); line-height: 1.35; white-space: nowrap; }
 .garden-parents { max-width: 290px; margin-inline: auto !important; font-size: 15px; color: var(--muted); }
 .garden-ampersand { display: flex; align-items: center; justify-content: center; gap: 16px; font: 42px var(--script); margin-top: 25px; }
 .garden-ampersand::before, .garden-ampersand::after { content: ''; width: 48px; height: 1px; background: var(--line); }
