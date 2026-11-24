@@ -20,7 +20,7 @@ export const event = {
   photos: {
     cover: "/photos/cover.svg",
     bride: "/photos/bride.jpg",
-    groom: "/photos/groom.svg",
+    groom: "/photos/groom.jpg",
     gallery: [
       "/photos/gallery-01.jpg", "/photos/gallery-02.jpg", "/photos/gallery-03.jpg", "/photos/gallery-04.jpg",
       "/photos/gallery-05.jpg", "/photos/gallery-06.jpg", "/photos/gallery-07.jpg", "/photos/gallery-08.jpg",
